@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pericia.FileStorage.Core\Pericia.FileStorage.Core.csproj" />
+    <ProjectReference Include="..\Pericia.Storage.Core\Pericia.Storage.Core.csproj" />
   </ItemGroup>
 
 </Project>
