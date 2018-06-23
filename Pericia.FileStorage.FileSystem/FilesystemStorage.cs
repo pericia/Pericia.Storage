@@ -30,7 +30,7 @@ namespace Pericia.FileStorage.FileSystem
             }
 
             var filePath = Path.Combine(Folder, fileId);
-            var folder = Path.GetFullPath(filePath);
+            var folder = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);

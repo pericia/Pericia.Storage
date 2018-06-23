@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.FileStorage.Core", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.FileStorage.FileSystem", "Pericia.FileStorage.FileSystem\Pericia.FileStorage.FileSystem.csproj", "{2BC2B499-473C-420C-A4FB-0FB2361A3CD3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.FileStorage.Tests", "Pericia.FileStorage.Tests\Pericia.FileStorage.Tests.csproj", "{4B0693BE-F4D6-4A52-A5CC-589357D077E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{2BC2B499-473C-420C-A4FB-0FB2361A3CD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BC2B499-473C-420C-A4FB-0FB2361A3CD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BC2B499-473C-420C-A4FB-0FB2361A3CD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B0693BE-F4D6-4A52-A5CC-589357D077E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B0693BE-F4D6-4A52-A5CC-589357D077E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B0693BE-F4D6-4A52-A5CC-589357D077E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B0693BE-F4D6-4A52-A5CC-589357D077E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
