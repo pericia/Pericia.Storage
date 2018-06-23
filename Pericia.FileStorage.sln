@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.FileStorage", "Pericia.FileStorage\Pericia.FileStorage.csproj", "{1F617DC2-D4F7-4955-92C2-B9230E3A405D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.FileStorage.FileSystem", "..\Pericia.FileStorage.FileSystem\Pericia.FileStorage.FileSystem.csproj", "{D13B44AC-2237-405A-976C-6B6BF7FC8E0E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E95CDFFA-F549-4CCB-9BA0-A5591068BD40}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1F617DC2-D4F7-4955-92C2-B9230E3A405D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F617DC2-D4F7-4955-92C2-B9230E3A405D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F617DC2-D4F7-4955-92C2-B9230E3A405D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F617DC2-D4F7-4955-92C2-B9230E3A405D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D13B44AC-2237-405A-976C-6B6BF7FC8E0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D13B44AC-2237-405A-976C-6B6BF7FC8E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D13B44AC-2237-405A-976C-6B6BF7FC8E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D13B44AC-2237-405A-976C-6B6BF7FC8E0E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {80F6BB4F-A0DF-445B-AB8D-81D51B6EB78E}
+	EndGlobalSection
+EndGlobal
