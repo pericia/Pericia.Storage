@@ -6,11 +6,11 @@ namespace Pericia.FileStorage.FileSystem
 {
     public class FileSystemStorage : IFileStorage
     {
-        private string Folder { get; }
+        private readonly string _folder;
 
-        public FileSystemStorage(FileStorageSettings settings)
+        public FileSystemStorage(string path, string container)
         {
-            this.Folder = settings.Path;
+            _folder = Path.Combine(path, container);
         }
 
         public Task<string> SaveFile(Stream fileData)
@@ -29,7 +29,7 @@ namespace Pericia.FileStorage.FileSystem
                 throw new ArgumentException("File id is mandatory", nameof(fileId));
             }
 
-            var filePath = Path.Combine(Folder, fileId);
+            var filePath = Path.Combine(_folder, fileId);
             var folder = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(folder))
             {
@@ -46,7 +46,7 @@ namespace Pericia.FileStorage.FileSystem
 
         public Task<Stream> GetFile(string fileId)
         {
-            var filePath = Path.Combine(Folder, fileId);
+            var filePath = Path.Combine(_folder, fileId);
 
             if (File.Exists(filePath))
             {
@@ -58,7 +58,7 @@ namespace Pericia.FileStorage.FileSystem
 
         public Task DeleteFile(string fileId)
         {
-            var filePath = Path.Combine(Folder, fileId);
+            var filePath = Path.Combine(_folder, fileId);
 
             if (File.Exists(filePath))
             {

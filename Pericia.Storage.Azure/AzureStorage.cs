@@ -10,10 +10,10 @@ namespace Pericia.FileStorage.Azure
     {
         private readonly CloudBlobContainer _cloudBlobContainer;
 
-        public AzureStorage(FileStorageSettings settings)
+        public AzureStorage(string connectionString, string container)
         {
-            var storageConnectionString = settings.ApiSecret;
-            var containerName = settings.Path;
+            var storageConnectionString = connectionString;
+            var containerName = container;
 
             if (CloudStorageAccount.TryParse(storageConnectionString, out var storageAccount))
             {
