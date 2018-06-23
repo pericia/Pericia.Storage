@@ -8,7 +8,7 @@ namespace Pericia.FileStorage
     {
         Task<string> SaveFile(Stream fileData);
 
-        Task<string> UpdateFile(Stream fileData, string fileId);
+        Task<string> SaveFile(Stream fileData, string fileId);
 
         Task<Stream> GetFile(string fileId);
 

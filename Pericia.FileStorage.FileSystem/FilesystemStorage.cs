@@ -15,10 +15,10 @@ namespace Pericia.FileStorage.FileSystem
 
         public Task<string> SaveFile(Stream fileData)
         {
-            return UpdateFile(fileData, Guid.NewGuid().ToString());
+            return SaveFile(fileData, Guid.NewGuid().ToString());
         }
 
-        public async Task<string> UpdateFile(Stream fileData, string fileId)
+        public async Task<string> SaveFile(Stream fileData, string fileId)
         {
             if (fileData == null)
             {
