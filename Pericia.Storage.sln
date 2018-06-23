@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.Tests", "Pe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.Storage.OpenStack", "Pericia.Storage.OpenStack\Pericia.Storage.OpenStack.csproj", "{9602D7B8-3F05-46E5-B99B-1452D6C3B9C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.Storage.Aws", "Pericia.Storage.Aws\Pericia.Storage.Aws.csproj", "{42BE97AC-4335-4168-9E7C-3921B4B839F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{9602D7B8-3F05-46E5-B99B-1452D6C3B9C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9602D7B8-3F05-46E5-B99B-1452D6C3B9C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9602D7B8-3F05-46E5-B99B-1452D6C3B9C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42BE97AC-4335-4168-9E7C-3921B4B839F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42BE97AC-4335-4168-9E7C-3921B4B839F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42BE97AC-4335-4168-9E7C-3921B4B839F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42BE97AC-4335-4168-9E7C-3921B4B839F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
