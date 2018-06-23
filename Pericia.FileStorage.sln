@@ -3,14 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.FileStorage", "Pericia.FileStorage\Pericia.FileStorage.csproj", "{1F617DC2-D4F7-4955-92C2-B9230E3A405D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.FileStorage.FileSystem", "..\Pericia.FileStorage.FileSystem\Pericia.FileStorage.FileSystem.csproj", "{D13B44AC-2237-405A-976C-6B6BF7FC8E0E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E95CDFFA-F549-4CCB-9BA0-A5591068BD40}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.FileStorage.Core", "Pericia.FileStorage.Core\Pericia.FileStorage.Core.csproj", "{1625F96A-C335-4CD2-AD67-5800F7B930DA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.FileStorage.FileSystem", "Pericia.FileStorage.FileSystem\Pericia.FileStorage.FileSystem.csproj", "{2BC2B499-473C-420C-A4FB-0FB2361A3CD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,14 +18,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1F617DC2-D4F7-4955-92C2-B9230E3A405D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1F617DC2-D4F7-4955-92C2-B9230E3A405D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1F617DC2-D4F7-4955-92C2-B9230E3A405D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1F617DC2-D4F7-4955-92C2-B9230E3A405D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D13B44AC-2237-405A-976C-6B6BF7FC8E0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D13B44AC-2237-405A-976C-6B6BF7FC8E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D13B44AC-2237-405A-976C-6B6BF7FC8E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D13B44AC-2237-405A-976C-6B6BF7FC8E0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1625F96A-C335-4CD2-AD67-5800F7B930DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1625F96A-C335-4CD2-AD67-5800F7B930DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1625F96A-C335-4CD2-AD67-5800F7B930DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1625F96A-C335-4CD2-AD67-5800F7B930DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BC2B499-473C-420C-A4FB-0FB2361A3CD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BC2B499-473C-420C-A4FB-0FB2361A3CD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BC2B499-473C-420C-A4FB-0FB2361A3CD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BC2B499-473C-420C-A4FB-0FB2361A3CD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

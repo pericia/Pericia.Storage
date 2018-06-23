@@ -4,5 +4,6 @@ namespace Pericia.FileStorage
 {
     public class IFileStorage
     {
+
     }
 }
