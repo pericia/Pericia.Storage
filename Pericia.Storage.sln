@@ -17,11 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.FileSystem"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.Tests", "Pericia.Storage.Tests\Pericia.Storage.Tests.csproj", "{D76FA0A6-1DAC-4C98-A5FA-4A2BAE33B6F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.Storage.OpenStack", "Pericia.Storage.OpenStack\Pericia.Storage.OpenStack.csproj", "{9602D7B8-3F05-46E5-B99B-1452D6C3B9C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.OpenStack", "Pericia.Storage.OpenStack\Pericia.Storage.OpenStack.csproj", "{9602D7B8-3F05-46E5-B99B-1452D6C3B9C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.Storage.Aws", "Pericia.Storage.Aws\Pericia.Storage.Aws.csproj", "{42BE97AC-4335-4168-9E7C-3921B4B839F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.Aws", "Pericia.Storage.Aws\Pericia.Storage.Aws.csproj", "{42BE97AC-4335-4168-9E7C-3921B4B839F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.Storage.CacheStorage", "Pericia.Storage.CacheStorage\Pericia.Storage.CacheStorage.csproj", "{7A7F71BF-D1E6-4E36-9C01-4416E090F750}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.CacheStorage", "Pericia.Storage.CacheStorage\Pericia.Storage.CacheStorage.csproj", "{7A7F71BF-D1E6-4E36-9C01-4416E090F750}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

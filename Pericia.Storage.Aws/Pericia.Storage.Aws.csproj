@@ -1,7 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <Authors>Guillaume Lacasa</Authors>
+    <Company>Pericia</Company>
+    <Description>Pericia.Storage provider for AWS</Description>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/glacasa/Pericia.Storage/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/glacasa/Pericia.Storage</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/glacasa/Pericia.Storage</RepositoryUrl>
+    <AssemblyOriginatorKeyFile>../pericia.storage.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
