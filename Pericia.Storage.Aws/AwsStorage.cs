@@ -24,13 +24,17 @@ namespace Pericia.Storage.Aws
 
         public Task<string> SaveFile(Stream fileData)
         {
-            throw new NotImplementedException();
+            return SaveFile(fileData, Guid.NewGuid().ToString());
         }
 
         public async Task<string> SaveFile(Stream fileData, string fileId)
         {
-            var fileTransferUtility = new TransferUtility(_s3Client);
-            await fileTransferUtility.UploadAsync(fileData, _bucketName, fileId);
+            using (var memStream = new MemoryStream())
+            {
+                fileData.CopyTo(memStream);
+                var fileTransferUtility = new TransferUtility(_s3Client);
+                await fileTransferUtility.UploadAsync(memStream, _bucketName, fileId);
+            }
 
             return fileId;
         }
@@ -46,7 +50,9 @@ namespace Pericia.Storage.Aws
                 };
 
                 var response = await _s3Client.GetObjectAsync(request);
-                return response.ResponseStream;
+                var memStream = new MemoryStream();
+                response.ResponseStream.CopyTo(memStream);
+                return memStream;
             }
             catch (AmazonS3Exception ex)
             {
