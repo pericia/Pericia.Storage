@@ -10,6 +10,11 @@ namespace Pericia.Storage.Azure
     {
         private readonly CloudBlobContainer _cloudBlobContainer;
 
+        public AzureStorage()
+        {
+            throw new NotImplementedException();
+        }
+
         public AzureStorage(AzureStorageOptions options)
         {
             var storageConnectionString = options.ConnectionString;
@@ -20,6 +25,11 @@ namespace Pericia.Storage.Azure
                 CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
                 _cloudBlobContainer = cloudBlobClient.GetContainerReference(containerName);
             }
+        }
+
+        public void Init(FileStorageOptions options)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<string> SaveFile(Stream fileData)

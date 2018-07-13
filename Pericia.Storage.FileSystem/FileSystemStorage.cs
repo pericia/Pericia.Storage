@@ -6,12 +6,23 @@ namespace Pericia.Storage.FileSystem
 {
     public class FileSystemStorage : IFileStorage
     {
-        private readonly string _folder;
+        private string _folder;
+
+        public FileSystemStorage()
+        {
+        }
 
         public FileSystemStorage(FileSystemStorageOptions options)
         {
             _folder = Path.Combine(options.Path, options.Container);
         }
+
+        public void Init(FileStorageOptions options)
+        {
+            var o = (FileSystemStorageOptions)options;
+            _folder = Path.Combine(o.Path, o.Container);
+        }
+
 
         public Task<string> SaveFile(Stream fileData)
         {

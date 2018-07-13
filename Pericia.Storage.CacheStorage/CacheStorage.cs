@@ -8,10 +8,21 @@ namespace Pericia.Storage.CacheStorage
     {
         private readonly IFileStorage _referenceStorage;
         private readonly IFileStorage _cacheStorage;
+
+        public CacheStorage()
+        {
+
+        }
+
         public CacheStorage(IFileStorage referenceStorage, IFileStorage cacheStorage)
         {
             _referenceStorage = referenceStorage;
             _cacheStorage = cacheStorage;
+        }
+
+        public void Init(FileStorageOptions options)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<string> SaveFile(Stream fileData)
@@ -85,5 +96,6 @@ namespace Pericia.Storage.CacheStorage
 
             await _referenceStorage.DeleteFile(fileId);
         }
+
     }
 }

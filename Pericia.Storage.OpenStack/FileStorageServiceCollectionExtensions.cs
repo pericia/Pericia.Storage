@@ -11,15 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static FileStorageServiceBuilder AddOpenStack(this FileStorageServiceBuilder builder, Action<OpenStackStorageOptions> storageOptionsConfig)
         {
-            var options = new OpenStackStorageOptions();
-            builder.ApplyOptions(options);
-            storageOptionsConfig?.Invoke(options);
-
-            var storage = new OpenStackStorage(options);
-            builder.Services.TryAddSingleton<IFileStorage>(storage);
-            builder.Services.AddSingleton(storage);
-
-            return builder;
+            return builder.AddService<OpenStackStorage, OpenStackStorageOptions>(storageOptionsConfig);
         }
     }
 }

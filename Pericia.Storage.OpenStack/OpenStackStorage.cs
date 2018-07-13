@@ -9,11 +9,19 @@ namespace Pericia.Storage.OpenStack
 {
     public class OpenStackStorage : IFileStorage
     {
-        private readonly OpenStackStorageOptions _settings;
+        private OpenStackStorageOptions _options;
 
-        public OpenStackStorage(OpenStackStorageOptions settings)
+        public OpenStackStorage(OpenStackStorageOptions options)
         {
-            _settings = settings;
+            _options = options;
+        }
+        public OpenStackStorage()
+        {
+        }
+
+        public void Init(FileStorageOptions options)
+        {
+            _options = (OpenStackStorageOptions)options;
         }
 
         public Task<string> SaveFile(Stream fileData)
@@ -28,7 +36,7 @@ namespace Pericia.Storage.OpenStack
                 throw new ArgumentException("OpenStackStorage.SaveFile : fileData is null");
             }
 
-            var url = _settings.ApiEndpoint + _settings.Container + "/" + fileId;
+            var url = _options.ApiEndpoint + _options.Container + "/" + fileId;
             var request = await CreateRequest("PUT", url);
 
             if (request == null)
@@ -49,7 +57,7 @@ namespace Pericia.Storage.OpenStack
 
         public async Task<Stream> GetFile(string fileId)
         {
-            var request = await CreateRequest("GET", _settings.ApiEndpoint + _settings.Container + "/" + fileId);
+            var request = await CreateRequest("GET", _options.ApiEndpoint + _options.Container + "/" + fileId);
 
             try
             {
@@ -72,7 +80,7 @@ namespace Pericia.Storage.OpenStack
 
         public async Task DeleteFile(string fileId)
         {
-            var request = await CreateRequest("DELETE", _settings.ApiEndpoint + _settings.Container + "/" + fileId);
+            var request = await CreateRequest("DELETE", _options.ApiEndpoint + _options.Container + "/" + fileId);
             await request.GetResponseAsync();
         }
 
@@ -129,8 +137,8 @@ namespace Pericia.Storage.OpenStack
                 return TokenId;
             }
 
-            var auth = "{\"auth\": {\"tenantName\": \"" + _settings.TenantName + "\", \"passwordCredentials\": {\"username\": \"" + _settings.UserId + "\", \"password\": \"" + _settings.Password + "\"}}}";
-            var request = await CreatePostJsonRequest(_settings.AuthEndpoint + "tokens", auth, false);
+            var auth = "{\"auth\": {\"tenantName\": \"" + _options.TenantName + "\", \"passwordCredentials\": {\"username\": \"" + _options.UserId + "\", \"password\": \"" + _options.Password + "\"}}}";
+            var request = await CreatePostJsonRequest(_options.AuthEndpoint + "tokens", auth, false);
 
             var response = await request.GetResponseAsync();
 

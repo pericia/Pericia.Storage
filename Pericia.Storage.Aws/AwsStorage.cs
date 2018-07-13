@@ -13,12 +13,22 @@ namespace Pericia.Storage.Aws
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucketName;
 
+        public AwsStorage()
+        {
+            throw new NotImplementedException();
+        }
+
         public AwsStorage(string container, string accessKey, string secretKey)
         {
             var credentials = new BasicAWSCredentials(accessKey, secretKey);
             _s3Client = new AmazonS3Client(credentials);
 
             _bucketName = container;
+        }
+
+        public void Init(FileStorageOptions options)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<string> SaveFile(Stream fileData)
@@ -69,5 +79,6 @@ namespace Pericia.Storage.Aws
         {
             return _s3Client.DeleteObjectAsync(_bucketName, fileId);
         }
+
     }
 }

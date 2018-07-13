@@ -6,6 +6,8 @@ namespace Pericia.Storage
 {
     public interface IFileStorage
     {
+        void Init(FileStorageOptions options);
+
         Task<string> SaveFile(Stream fileData);
 
         Task<string> SaveFile(Stream fileData, string fileId);
