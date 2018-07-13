@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Pericia.Storage;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pericia.Storage
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class FileStorageServiceCollectionExtensions
     {
