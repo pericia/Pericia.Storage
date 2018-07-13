@@ -8,28 +8,29 @@ namespace Pericia.Storage.Azure
 {
     public class AzureStorage : IFileStorage
     {
-        private readonly CloudBlobContainer _cloudBlobContainer;
+        private CloudBlobContainer _cloudBlobContainer;
 
         public AzureStorage()
         {
-            throw new NotImplementedException();
         }
 
         public AzureStorage(AzureStorageOptions options)
         {
-            var storageConnectionString = options.ConnectionString;
-            var containerName = options.Container;
+            Init(options);
+        }
+
+        public void Init(FileStorageOptions options)
+        {
+            var o = (AzureStorageOptions)options;
+
+            var storageConnectionString = o.ConnectionString;
+            var containerName = o.Container;
 
             if (CloudStorageAccount.TryParse(storageConnectionString, out var storageAccount))
             {
                 CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
                 _cloudBlobContainer = cloudBlobClient.GetContainerReference(containerName);
             }
-        }
-
-        public void Init(FileStorageOptions options)
-        {
-            throw new NotImplementedException();
         }
 
         public Task<string> SaveFile(Stream fileData)

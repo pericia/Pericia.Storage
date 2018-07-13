@@ -11,15 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static FileStorageServiceBuilder AddAzure(this FileStorageServiceBuilder builder, Action<AzureStorageOptions> storageOptionsConfig)
         {
-            var options = new AzureStorageOptions();
-            builder.ApplyOptions(options);
-            storageOptionsConfig?.Invoke(options);
-
-            var storage = new AzureStorage(options);
-            builder.Services.TryAddSingleton<IFileStorage>(storage);
-            builder.Services.AddSingleton(storage);
-
-            return builder;
+            return builder.AddService<AzureStorage, AzureStorageOptions>(storageOptionsConfig);           
         }
     }
 }

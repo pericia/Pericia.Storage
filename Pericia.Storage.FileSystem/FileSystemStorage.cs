@@ -14,7 +14,7 @@ namespace Pericia.Storage.FileSystem
 
         public FileSystemStorage(FileSystemStorageOptions options)
         {
-            _folder = Path.Combine(options.Path, options.Container);
+            Init(options);
         }
 
         public void Init(FileStorageOptions options)

@@ -11,15 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static FileStorageServiceBuilder AddFileSystem(this FileStorageServiceBuilder builder, Action<FileSystemStorageOptions> storageOptionsConfig)
         {
-            var options = new FileSystemStorageOptions();
-            builder.ApplyOptions(options);
-            storageOptionsConfig?.Invoke(options);
-
-            var storage = new FileSystemStorage(options);
-            builder.Services.TryAddSingleton<IFileStorage>(storage);
-            builder.Services.AddSingleton(storage);
-
-            return builder;
+            return builder.AddService<FileSystemStorage, FileSystemStorageOptions>(storageOptionsConfig);
         }
     }
 }
