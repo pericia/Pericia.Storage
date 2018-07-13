@@ -8,7 +8,12 @@ namespace Pericia.Storage
     public class FileStorageServiceBuilder
     {
         public IServiceCollection Services { get; set; }
+        
+        public Action<FileStorageOptions> OptionsConfig { get; set; }
 
-        public FileStorageOptions Options { get; set; }
+        public void ApplyOptions(FileStorageOptions options)
+        {
+            OptionsConfig?.Invoke(options);
+        }
     }
 }

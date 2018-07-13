@@ -9,9 +9,9 @@ namespace Pericia.Storage.OpenStack
 {
     public class OpenStackStorage : IFileStorage
     {
-        private readonly OpenStackStorageSettings _settings;
+        private readonly OpenStackStorageOptions _settings;
 
-        public OpenStackStorage(OpenStackStorageSettings settings)
+        public OpenStackStorage(OpenStackStorageOptions settings)
         {
             _settings = settings;
         }

@@ -9,26 +9,18 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class FileStorageServiceCollectionExtensions
     {
-        public static FileStorageServiceBuilder AddFileSystem(this FileStorageServiceBuilder builder, OpenStackStorageSettings settings)
+        public static FileStorageServiceBuilder AddFileSystem(this FileStorageServiceBuilder builder, Action<OpenStackStorageOptions> storageOptionsConfig)
         {
-            var storage = new OpenStackStorage(settings);
+            var options = new OpenStackStorageOptions();
+            builder.ApplyOptions(options);
+            storageOptionsConfig?.Invoke(options);
 
+            var storage = new OpenStackStorage(options);
             builder.Services.TryAddSingleton<IFileStorage>(storage);
             builder.Services.AddSingleton(storage);
 
             return builder;
         }
-
-        public static FileStorageServiceBuilder AddFileSystem(this FileStorageServiceBuilder builder, Action<OpenStackStorageSettings> settingsConfig)
-        {
-            var settings = new OpenStackStorageSettings
-            {
-                Container = builder.Options.Container
-            };
-            settingsConfig?.Invoke(settings);
-            return AddFileSystem(builder, settings);
-        }
-
     }
 }
 

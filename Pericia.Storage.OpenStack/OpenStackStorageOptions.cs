@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Pericia.Storage.OpenStack
 {
-    public class OpenStackStorageSettings
+    public class OpenStackStorageOptions : FileStorageOptions
     {
         // Authentication
         public string AuthEndpoint { get; set; }
@@ -16,6 +16,5 @@ namespace Pericia.Storage.OpenStack
         // Openstack access
         public string ApiEndpoint { get; set; }
 
-        public string Container { get; set; }
     }
 }
