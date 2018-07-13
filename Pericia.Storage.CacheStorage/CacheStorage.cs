@@ -9,11 +9,6 @@ namespace Pericia.Storage.CacheStorage
         private readonly IFileStorage _referenceStorage;
         private readonly IFileStorage _cacheStorage;
 
-        public CacheStorage()
-        {
-
-        }
-
         public CacheStorage(IFileStorage referenceStorage, IFileStorage cacheStorage)
         {
             _referenceStorage = referenceStorage;
@@ -22,7 +17,6 @@ namespace Pericia.Storage.CacheStorage
 
         public void Init(FileStorageOptions options)
         {
-            throw new NotImplementedException();
         }
 
         public Task<string> SaveFile(Stream fileData)

@@ -10,25 +10,25 @@ namespace Pericia.Storage.Aws
 {
     public class AwsStorage : IFileStorage
     {
-        private readonly IAmazonS3 _s3Client;
-        private readonly string _bucketName;
+        private IAmazonS3 _s3Client;
+        private string _bucketName;
 
         public AwsStorage()
         {
-            throw new NotImplementedException();
         }
 
-        public AwsStorage(string container, string accessKey, string secretKey)
+        public AwsStorage(AwsStorageOptions options)
         {
-            var credentials = new BasicAWSCredentials(accessKey, secretKey);
-            _s3Client = new AmazonS3Client(credentials);
-
-            _bucketName = container;
+            Init(options);
         }
 
         public void Init(FileStorageOptions options)
         {
-            throw new NotImplementedException();
+            var o = (AwsStorageOptions)options;
+            var credentials = new BasicAWSCredentials(o.AccessKey, o.SecretKey);
+            _s3Client = new AmazonS3Client(credentials);
+
+            _bucketName = o.Container;
         }
 
         public Task<string> SaveFile(Stream fileData)
