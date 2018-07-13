@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace Pericia.FileStorage.Azure
+namespace Pericia.Storage.Azure
 {
     public class AzureStorage : IFileStorage
     {

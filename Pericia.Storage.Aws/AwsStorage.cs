@@ -5,7 +5,6 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
-using Pericia.FileStorage;
 
 namespace Pericia.Storage.Aws
 {

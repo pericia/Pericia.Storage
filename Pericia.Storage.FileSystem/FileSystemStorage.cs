@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Pericia.FileStorage.FileSystem
+namespace Pericia.Storage.FileSystem
 {
     public class FileSystemStorage : IFileStorage
     {

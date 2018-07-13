@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Pericia.Storage.FileSystem;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Pericia.FileStorage.FileSystem;
 using Xunit;
 
-namespace Pericia.FileStorage.Tests
+namespace Pericia.Storage.Tests
 {
     public class FileSystemTest
     {
