@@ -13,7 +13,12 @@ namespace Pericia.Storage.Tests
         [Fact]
         public async Task SaveFile()
         {
-            var fileStorage = new FileSystemStorage(@"C:\Temp\", "TestContainer");
+            var options = new FileSystemStorageOptions
+            {
+                Path = @"C:\Temp\",
+                Container = "TestContainer"
+            };
+            var fileStorage = new FileSystemStorage(options);
 
             string fileId;
             using (var memoryStream = new MemoryStream())
