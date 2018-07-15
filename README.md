@@ -72,7 +72,7 @@ If you only want to use one container in your app, you can register it directly 
 
 ### File System
 
-[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.FileSystem.svg)](https://www.nuget.org/packages/Pericia.Storage.FileSystem/
+[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.FileSystem.svg)](https://www.nuget.org/packages/Pericia.Storage.FileSystem/)
 
 This provider saves the files on the hard drive.
 
@@ -80,7 +80,7 @@ The only option needed is `Path`, the directory path.
 
 ### OpenStack
 
-[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.OpenStack.svg)](https://www.nuget.org/packages/Pericia.Storage.OpenStack/
+[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.OpenStack.svg)](https://www.nuget.org/packages/Pericia.Storage.OpenStack/)
 
 Saves to OpenStack. The following options are needed :
 
@@ -92,7 +92,7 @@ Saves to OpenStack. The following options are needed :
 
 ### Azure blobs
 
-[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.Azure.svg)](https://www.nuget.org/packages/Pericia.Storage.Azure/
+[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.Azure.svg)](https://www.nuget.org/packages/Pericia.Storage.Azure/)
 
 Saves the files to Azure Blob storage.
 
@@ -100,7 +100,7 @@ The only option needed is the `ConnectionString`
 
 ### AWS S3
 
-[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.Aws.svg)](https://www.nuget.org/packages/Pericia.Storage.Aws/
+[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.Aws.svg)](https://www.nuget.org/packages/Pericia.Storage.Aws/)
 
 Saves the files to AWS S3.
 
