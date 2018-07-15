@@ -30,25 +30,29 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
-        public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, IConfigurationSection configuration)
+        public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, IConfigurationSection configuration, string providerName = null)
             where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions, new()
         {
             var options = configuration.Get<TFileStorageOptions>();
 
+            if (!string.IsNullOrEmpty(providerName) && !string.IsNullOrEmpty(options.Provider) && 
+                !string.Equals(providerName, options.Provider, StringComparison.OrdinalIgnoreCase))
+            {
+                // Configuration asked for another specific provider, so we skip this one
+                return builder;
+            }
+            
             RegisterFileStorageProvider<TFileStorage, TFileStorageOptions>(builder, options);
             return builder;
         }
 
-        public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, IConfiguration configuration)
+        public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, IConfiguration configuration, string providerName = null)
             where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions, new()
         {
             var section = configuration.GetSection("Pericia.Storage");
-            var options = section.Get<TFileStorageOptions>();
-
-            RegisterFileStorageProvider<TFileStorage, TFileStorageOptions>(builder, options);
-            return builder;
+            return builder.AddService<TFileStorage, TFileStorageOptions>(section);
         }
 
         private static void RegisterFileStorageProvider<TFileStorage, TFileStorageOptions>(FileStorageServiceBuilder builder, TFileStorageOptions options)

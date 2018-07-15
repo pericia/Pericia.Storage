@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Pericia.Storage;
 using Pericia.Storage.Azure;
 using System;
@@ -11,7 +12,12 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static FileStorageServiceBuilder AddAzure(this FileStorageServiceBuilder builder, Action<AzureStorageOptions> storageOptionsConfig)
         {
-            return builder.AddService<AzureStorage, AzureStorageOptions>(storageOptionsConfig);           
+            return builder.AddService<AzureStorage, AzureStorageOptions>(storageOptionsConfig);
+        }
+
+        public static FileStorageServiceBuilder AddAzure(this FileStorageServiceBuilder builder, IConfigurationSection configuration)
+        {
+            return builder.AddService<AzureStorage, AzureStorageOptions>(configuration, "Azure");
         }
     }
 }

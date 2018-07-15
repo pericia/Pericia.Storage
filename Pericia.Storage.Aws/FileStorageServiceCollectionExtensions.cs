@@ -1,4 +1,5 @@
-﻿using Pericia.Storage;
+﻿using Microsoft.Extensions.Configuration;
+using Pericia.Storage;
 using Pericia.Storage.Aws;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,11 @@ namespace Microsoft.Extensions.DependencyInjection
         public static FileStorageServiceBuilder AddOpenStack(this FileStorageServiceBuilder builder, Action<AwsStorageOptions> storageOptionsConfig)
         {
             return builder.AddService<AwsStorage, AwsStorageOptions>(storageOptionsConfig);
+        }
+
+        public static FileStorageServiceBuilder AddOpenStack(this FileStorageServiceBuilder builder, IConfigurationSection configuration)
+        {
+            return builder.AddService<AwsStorage, AwsStorageOptions>(configuration, "Aws");
         }
     }
 }
