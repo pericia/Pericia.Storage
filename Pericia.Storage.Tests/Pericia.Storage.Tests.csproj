@@ -11,7 +11,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Pericia.Storage.Azure\Pericia.Storage.Azure.csproj" />
     <ProjectReference Include="..\Pericia.Storage.Core\Pericia.Storage.Core.csproj" />
     <ProjectReference Include="..\Pericia.Storage.FileSystem\Pericia.Storage.FileSystem.csproj" />
   </ItemGroup>

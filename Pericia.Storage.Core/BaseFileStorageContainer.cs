@@ -11,7 +11,7 @@ namespace Pericia.Storage
     {
         public string Container { get; set; }
 
-        protected TOptions Options { get; set; }
+        public TOptions Options { get; set; }
         FileStorageOptions IFileStorageContainer.Options
         {
             get
