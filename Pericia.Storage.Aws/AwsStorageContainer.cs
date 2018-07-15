@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
+using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -12,7 +14,7 @@ namespace Pericia.Storage.Aws
     {
         //private IAmazonS3 _s3Client;
         private Lazy<IAmazonS3> _s3Client;
-        
+
         public AwsStorageContainer()
             : this(null, null)
         {
@@ -25,7 +27,17 @@ namespace Pericia.Storage.Aws
             _s3Client = new Lazy<IAmazonS3>(() =>
             {
                 var credentials = new BasicAWSCredentials(Options.AccessKey, Options.SecretKey);
-                return new AmazonS3Client(credentials);
+                RegionEndpoint region;
+                try
+                {
+                    region = (RegionEndpoint)typeof(RegionEndpoint).GetField("EUWest3").GetValue(null);
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Incorrect AWS region");
+                }
+
+                return new AmazonS3Client(credentials, region);
             });
         }
 
