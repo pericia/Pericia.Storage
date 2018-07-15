@@ -4,13 +4,7 @@ using System.Text;
 
 namespace Pericia.Storage.FileSystem
 {
-    public class FileSystemStorage : IFileStorage
+    public class FileSystemStorage : BaseFileStorage<FileSystemStorageContainer, FileSystemStorageOptions>
     {
-        public FileStorageOptions Options { get; set; }
-
-        public IFileStorageContainer GetContainer(string container)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

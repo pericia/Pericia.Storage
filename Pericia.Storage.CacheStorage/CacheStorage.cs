@@ -9,16 +9,16 @@ namespace Pericia.Storage.CacheStorage
         private readonly IFileStorageContainer _referenceStorage;
         private readonly IFileStorageContainer _cacheStorage;
 
+        FileStorageOptions IFileStorageContainer.Options { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        string IFileStorageContainer.Container { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+
+
         public CacheStorage(IFileStorageContainer referenceStorage, IFileStorageContainer cacheStorage)
         {
             _referenceStorage = referenceStorage;
             _cacheStorage = cacheStorage;
         }
-
-        public void Init(FileStorageOptions options, string container)
-        {
-            throw new NotSupportedException();
-        }
+        
 
         public Task<string> SaveFile(Stream fileData)
         {
@@ -92,5 +92,24 @@ namespace Pericia.Storage.CacheStorage
             await _referenceStorage.DeleteFile(fileId);
         }
 
+        Task<string> IFileStorageContainer.SaveFile(Stream fileData)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<string> IFileStorageContainer.SaveFile(Stream fileData, string fileId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Stream> IFileStorageContainer.GetFile(string fileId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IFileStorageContainer.DeleteFile(string fileId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
