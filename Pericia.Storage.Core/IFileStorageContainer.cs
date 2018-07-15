@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace Pericia.Storage
 {
-    public interface IFileStorage
+    public interface IFileStorageContainer
     {
-        void Init(FileStorageOptions options);
+        void Init(FileStorageOptions options, string container);
 
         Task<string> SaveFile(Stream fileData);
 

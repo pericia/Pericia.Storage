@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Pericia.Storage.FileSystem
 {
-    public class FileSystemStorage : IFileStorage
+    public class FileSystemStorage : IFileStorageContainer
     {
         private string _folder;
 
@@ -12,15 +12,15 @@ namespace Pericia.Storage.FileSystem
         {
         }
 
-        public FileSystemStorage(FileSystemStorageOptions options)
+        public FileSystemStorage(FileSystemStorageOptions options, string container)
         {
-            Init(options);
+            Init(options, container);
         }
 
-        public void Init(FileStorageOptions options)
+        public void Init(FileStorageOptions options, string container)
         {
             var o = (FileSystemStorageOptions)options;
-            _folder = Path.Combine(o.Path, o.Container);
+            _folder = Path.Combine(o.Path, container);
         }
 
 

@@ -15,10 +15,9 @@ namespace Pericia.Storage.Tests
         {
             var options = new FileSystemStorageOptions
             {
-                Path = @"C:\Temp\",
-                Container = "TestContainer"
+                Path = @"C:\Temp\"
             };
-            var fileStorage = new FileSystemStorage(options);
+            var fileStorage = new FileSystemStorage(options, "TestContainer");
 
             string fileId;
             using (var memoryStream = new MemoryStream())

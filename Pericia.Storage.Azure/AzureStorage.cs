@@ -6,7 +6,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Pericia.Storage.Azure
 {
-    public class AzureStorage : IFileStorage
+    public class AzureStorage : IFileStorageContainer
     {
         private CloudBlobContainer _cloudBlobContainer;
 
@@ -14,17 +14,17 @@ namespace Pericia.Storage.Azure
         {
         }
 
-        public AzureStorage(AzureStorageOptions options)
+        public AzureStorage(AzureStorageOptions options, string container)
         {
-            Init(options);
+            Init(options, container);
         }
 
-        public void Init(FileStorageOptions options)
+        public void Init(FileStorageOptions options, string container)
         {
             var o = (AzureStorageOptions)options;
 
             var storageConnectionString = o.ConnectionString;
-            var containerName = o.Container;
+            var containerName = container;
 
             if (CloudStorageAccount.TryParse(storageConnectionString, out var storageAccount))
             {

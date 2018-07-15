@@ -8,7 +8,7 @@ using Amazon.S3.Transfer;
 
 namespace Pericia.Storage.Aws
 {
-    public class AwsStorage : IFileStorage
+    public class AwsStorage : IFileStorageContainer
     {
         private IAmazonS3 _s3Client;
         private string _bucketName;
@@ -17,18 +17,18 @@ namespace Pericia.Storage.Aws
         {
         }
 
-        public AwsStorage(AwsStorageOptions options)
+        public AwsStorage(AwsStorageOptions options, string container)
         {
-            Init(options);
+            Init(options, container);
         }
 
-        public void Init(FileStorageOptions options)
+        public void Init(FileStorageOptions options, string container)
         {
             var o = (AwsStorageOptions)options;
             var credentials = new BasicAWSCredentials(o.AccessKey, o.SecretKey);
             _s3Client = new AmazonS3Client(credentials);
 
-            _bucketName = o.Container;
+            _bucketName = container;
         }
 
         public Task<string> SaveFile(Stream fileData)

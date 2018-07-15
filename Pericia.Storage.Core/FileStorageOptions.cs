@@ -8,8 +8,5 @@ namespace Pericia.Storage
     {
         public string Provider { get; set; }
 
-        public bool KeepStreamAlive { get; set; }
-
-        public string Container { get; set; }
     }
 }

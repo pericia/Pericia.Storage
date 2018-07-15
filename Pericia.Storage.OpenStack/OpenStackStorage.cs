@@ -7,21 +7,24 @@ using Newtonsoft.Json;
 
 namespace Pericia.Storage.OpenStack
 {
-    public class OpenStackStorage : IFileStorage
+    public class OpenStackStorage : IFileStorageContainer
     {
         private OpenStackStorageOptions _options;
+        private string _container;
 
-        public OpenStackStorage(OpenStackStorageOptions options)
-        {
-            _options = options;
-        }
         public OpenStackStorage()
         {
         }
 
-        public void Init(FileStorageOptions options)
+        public OpenStackStorage(OpenStackStorageOptions options, string container)
+        {
+            Init(options, container);
+        }
+
+        public void Init(FileStorageOptions options, string container)
         {
             _options = (OpenStackStorageOptions)options;
+            _container = container;
         }
 
         public Task<string> SaveFile(Stream fileData)
@@ -36,7 +39,7 @@ namespace Pericia.Storage.OpenStack
                 throw new ArgumentException("OpenStackStorage.SaveFile : fileData is null");
             }
 
-            var url = _options.ApiEndpoint + _options.Container + "/" + fileId;
+            var url = _options.ApiEndpoint + _container + "/" + fileId;
             var request = await CreateRequest("PUT", url);
 
             if (request == null)
@@ -57,7 +60,7 @@ namespace Pericia.Storage.OpenStack
 
         public async Task<Stream> GetFile(string fileId)
         {
-            var request = await CreateRequest("GET", _options.ApiEndpoint + _options.Container + "/" + fileId);
+            var request = await CreateRequest("GET", _options.ApiEndpoint + _container + "/" + fileId);
 
             try
             {
@@ -80,7 +83,7 @@ namespace Pericia.Storage.OpenStack
 
         public async Task DeleteFile(string fileId)
         {
-            var request = await CreateRequest("DELETE", _options.ApiEndpoint + _options.Container + "/" + fileId);
+            var request = await CreateRequest("DELETE", _options.ApiEndpoint + _container + "/" + fileId);
             await request.GetResponseAsync();
         }
 

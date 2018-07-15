@@ -4,19 +4,20 @@ using System.Threading.Tasks;
 
 namespace Pericia.Storage.CacheStorage
 {
-    public class CacheStorage : IFileStorage
+    public class CacheStorage : IFileStorageContainer
     {
-        private readonly IFileStorage _referenceStorage;
-        private readonly IFileStorage _cacheStorage;
+        private readonly IFileStorageContainer _referenceStorage;
+        private readonly IFileStorageContainer _cacheStorage;
 
-        public CacheStorage(IFileStorage referenceStorage, IFileStorage cacheStorage)
+        public CacheStorage(IFileStorageContainer referenceStorage, IFileStorageContainer cacheStorage)
         {
             _referenceStorage = referenceStorage;
             _cacheStorage = cacheStorage;
         }
 
-        public void Init(FileStorageOptions options)
+        public void Init(FileStorageOptions options, string container)
         {
+            throw new NotSupportedException();
         }
 
         public Task<string> SaveFile(Stream fileData)
