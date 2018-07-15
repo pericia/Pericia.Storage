@@ -63,6 +63,18 @@ namespace Microsoft.Extensions.DependencyInjection
             storage.Options = options;            
             builder.Services.TryAddSingleton<IFileStorage>(storage);
             builder.Services.AddSingleton<TFileStorage>(storage);
+            builder.LastStorageAdded = storage;
+        }
+
+        public static FileStorageServiceBuilder AddContainer(this FileStorageServiceBuilder builder, string container)
+        {
+            var storage = builder.LastStorageAdded ?? throw new Exception("You must add a Storage service before adding a container");
+
+            var containerService = storage.GetContainer(container);
+            builder.Services.TryAddSingleton<IFileStorageContainer>(containerService);
+            builder.Services.AddSingleton(containerService.GetType(), containerService);
+
+            return builder;
         }
     }
 
