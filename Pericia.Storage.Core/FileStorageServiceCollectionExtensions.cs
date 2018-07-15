@@ -19,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, Action<TFileStorageOptions> storageOptionsConfig)
-            where TFileStorage : class, IFileStorageContainer, new()
+            where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions, new()
         {
             var options = new TFileStorageOptions();
@@ -31,24 +31,24 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, IConfigurationSection configuration, string providerName = null)
-            where TFileStorage : class, IFileStorageContainer, new()
+            where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions, new()
         {
             var options = configuration.Get<TFileStorageOptions>();
 
-            if (!string.IsNullOrEmpty(providerName) && !string.IsNullOrEmpty(options.Provider) && 
+            if (!string.IsNullOrEmpty(providerName) && !string.IsNullOrEmpty(options.Provider) &&
                 !string.Equals(providerName, options.Provider, StringComparison.OrdinalIgnoreCase))
             {
                 // Configuration asked for another specific provider, so we skip this one
                 return builder;
             }
-            
+
             RegisterFileStorageProvider<TFileStorage, TFileStorageOptions>(builder, options);
             return builder;
         }
 
         public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, IConfiguration configuration, string providerName = null)
-            where TFileStorage : class, IFileStorageContainer, new()
+            where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions, new()
         {
             var section = configuration.GetSection("Pericia.Storage");
@@ -56,11 +56,12 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         private static void RegisterFileStorageProvider<TFileStorage, TFileStorageOptions>(FileStorageServiceBuilder builder, TFileStorageOptions options)
-            where TFileStorage : class, IFileStorageContainer, new()
+            where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions
         {
             var storage = new TFileStorage();
-            builder.Services.TryAddSingleton<IFileStorageContainer>(storage);
+            storage.Options = options;            
+            builder.Services.TryAddSingleton<IFileStorage>(storage);
             builder.Services.AddSingleton<TFileStorage>(storage);
         }
     }
