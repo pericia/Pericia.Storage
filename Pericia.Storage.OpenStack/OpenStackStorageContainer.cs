@@ -82,8 +82,14 @@ namespace Pericia.Storage.OpenStack
         }
 
 
+        public override async Task CreateContainer()
+        {
+            var request = await CreateRequest("PUT", Options.ApiEndpoint + Container);
+            await request.GetResponseAsync();
+        }
 
 
+        #region Request helpers
         private async Task<WebRequest> CreateRequest(string method, string url, bool useToken = true)
         {
             var request = WebRequest.Create(url);
@@ -112,6 +118,7 @@ namespace Pericia.Storage.OpenStack
 
             return request;
         }
+        #endregion
 
         #region Token
         private static string TokenId;

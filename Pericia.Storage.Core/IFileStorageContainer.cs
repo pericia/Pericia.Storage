@@ -9,6 +9,8 @@ namespace Pericia.Storage
         FileStorageOptions Options { get; set; }
         string Container { get; set; }
 
+        Task CreateContainer();
+
         Task<string> SaveFile(Stream fileData);
 
         Task<string> SaveFile(Stream fileData, string fileId);

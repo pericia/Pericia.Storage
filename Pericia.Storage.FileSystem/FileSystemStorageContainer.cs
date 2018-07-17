@@ -82,6 +82,13 @@ namespace Pericia.Storage.FileSystem
             return Task.CompletedTask;
         }
 
-
+        public override Task CreateContainer()
+        {
+            if (!Directory.Exists(_folder))
+            {
+                Directory.CreateDirectory(_folder);
+            }
+            return Task.CompletedTask;
+        }
     }
 }

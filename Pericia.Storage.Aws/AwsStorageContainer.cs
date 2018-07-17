@@ -7,6 +7,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using Amazon.S3.Util;
 
 namespace Pericia.Storage.Aws
 {
@@ -90,5 +91,18 @@ namespace Pericia.Storage.Aws
             return _s3Client.Value.DeleteObjectAsync(Container, fileId);
         }
 
+        public override async Task CreateContainer()
+        {
+            if (!(await AmazonS3Util.DoesS3BucketExistAsync(_s3Client.Value, Container)))
+            {
+                var putBucketRequest = new PutBucketRequest
+                {
+                    BucketName = Container,
+                    UseClientRegion = true
+                };
+
+                PutBucketResponse putBucketResponse = await _s3Client.Value.PutBucketAsync(putBucketRequest);
+            }
+        }
     }
 }

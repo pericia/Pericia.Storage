@@ -24,6 +24,7 @@ namespace Pericia.Storage
             }
         }
 
+        public abstract Task CreateContainer();
         public abstract Task DeleteFile(string fileId);
         public abstract Task<Stream> GetFile(string fileId);
         public abstract Task<string> SaveFile(Stream fileData);

@@ -54,5 +54,9 @@ namespace Pericia.Storage.Azure
             return cloudBlockBlob.DeleteIfExistsAsync();
         }
 
+        public override Task CreateContainer()
+        {
+            return _cloudBlobContainer.Value.CreateIfNotExistsAsync();
+        }
     }
 }

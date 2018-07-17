@@ -92,24 +92,9 @@ namespace Pericia.Storage.CacheStorage
             await _referenceStorage.DeleteFile(fileId);
         }
 
-        Task<string> IFileStorageContainer.SaveFile(Stream fileData)
+        public Task CreateContainer()
         {
-            throw new NotImplementedException();
-        }
-
-        Task<string> IFileStorageContainer.SaveFile(Stream fileData, string fileId)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Stream> IFileStorageContainer.GetFile(string fileId)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IFileStorageContainer.DeleteFile(string fileId)
-        {
-            throw new NotImplementedException();
+            return Task.WhenAll(_referenceStorage.CreateContainer(), _cacheStorage.CreateContainer());
         }
     }
 }
