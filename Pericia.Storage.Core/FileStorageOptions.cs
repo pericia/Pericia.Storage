@@ -8,5 +8,7 @@ namespace Pericia.Storage
     {
         public string Provider { get; set; }
 
+        public string Container { get; set; }
+
     }
 }
