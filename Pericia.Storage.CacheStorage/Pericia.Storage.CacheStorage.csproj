@@ -9,12 +9,16 @@
     <Description>Pericia.Storage provider to add caching mechanism</Description>
     <PackageLicenseUrl>https://raw.githubusercontent.com/pericia/Pericia.Storage/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/pericia/Pericia.Storage</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/pericia/Pericia.Storage</RepositoryUrl>
+    <RepositoryUrl>https://pericia.visualstudio.com/Pericia.Storage/_git/Pericia.Storage</RepositoryUrl>
     <AssemblyOriginatorKeyFile>../pericia.storage.snk</AssemblyOriginatorKeyFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Pericia.Storage.Core\Pericia.Storage.Core.csproj" />
+    <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>
