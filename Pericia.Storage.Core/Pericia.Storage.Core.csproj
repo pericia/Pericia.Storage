@@ -10,7 +10,7 @@
     <Description>Core dll for Pericia.Storage</Description>
     <PackageLicenseUrl>https://raw.githubusercontent.com/pericia/Pericia.Storage/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/pericia/Pericia.Storage</PackageProjectUrl>
-    <RepositoryUrl>https://pericia.visualstudio.com/Pericia.Storage/_git/Pericia.Storage</RepositoryUrl>
+    <RepositoryUrl>https://github.com/pericia/Pericia.Storage.git</RepositoryUrl>
     <AssemblyOriginatorKeyFile>../pericia.storage.snk</AssemblyOriginatorKeyFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -22,6 +22,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.1" />
     <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>
