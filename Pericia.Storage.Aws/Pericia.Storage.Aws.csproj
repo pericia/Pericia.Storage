@@ -7,9 +7,9 @@
     <Authors>Guillaume Lacasa</Authors>
     <Company>Pericia</Company>
     <Description>Pericia.Storage provider for AWS</Description>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/pericia/Pericia.Storage/master/LICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/pericia/Pericia.Storage</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/pericia/Pericia.Storage.git</RepositoryUrl>
+    <PackageLicenseUrl>https://pericia.visualstudio.com/_git/Pericia.Storage?path=%2FLICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://pericia.visualstudio.com/Pericia.Storage</PackageProjectUrl>
+    <RepositoryUrl>https://pericia.visualstudio.com/Pericia.Storage/_git/Pericia.Storage</RepositoryUrl>
     <AssemblyOriginatorKeyFile>../pericia.storage.snk</AssemblyOriginatorKeyFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
