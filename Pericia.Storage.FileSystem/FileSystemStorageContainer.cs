@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pericia.Storage.FileSystem
@@ -27,12 +28,7 @@ namespace Pericia.Storage.FileSystem
 
 
 
-        public override Task<string> SaveFile(Stream fileData)
-        {
-            return SaveFile(fileData, Guid.NewGuid().ToString());
-        }
-
-        public override async Task<string> SaveFile(Stream fileData, string fileId)
+        public override async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
             if (fileData == null)
             {
@@ -52,13 +48,14 @@ namespace Pericia.Storage.FileSystem
 
             using (var stream = File.Create(filePath))
             {
-                await fileData.CopyToAsync(stream);
+                await fileData.CopyToAsync(stream, 81920, cancellationToken);
+                await stream.FlushAsync();
             }
 
             return fileId;
         }
 
-        public override Task<Stream> GetFile(string fileId)
+        public override Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
         {
             var filePath = Path.Combine(_folder, fileId);
 
@@ -70,7 +67,7 @@ namespace Pericia.Storage.FileSystem
             return Task.FromResult<Stream>(null);
         }
 
-        public override Task DeleteFile(string fileId)
+        public override Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
             var filePath = Path.Combine(_folder, fileId);
 
@@ -82,7 +79,7 @@ namespace Pericia.Storage.FileSystem
             return Task.CompletedTask;
         }
 
-        public override Task CreateContainer()
+        public override Task CreateContainer(CancellationToken cancellationToken)
         {
             if (!Directory.Exists(_folder))
             {

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Pericia.Storage.OpenStack
 {
@@ -19,14 +20,9 @@ namespace Pericia.Storage.OpenStack
             Options = options;
             Container = container;
         }
-        
 
-        public override Task<string> SaveFile(Stream fileData)
-        {
-            return SaveFile(fileData, Guid.NewGuid().ToString());
-        }
 
-        public override async Task<string> SaveFile(Stream fileData, string fileId)
+        public override async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
             if (fileData == null)
             {
@@ -34,7 +30,8 @@ namespace Pericia.Storage.OpenStack
             }
 
             var url = Options.ApiEndpoint + Container + "/" + fileId;
-            var request = await CreateRequest("PUT", url);
+            var request = await CreateRequest("PUT", url, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (request == null)
             {
@@ -42,23 +39,27 @@ namespace Pericia.Storage.OpenStack
             }
 
             Stream dataStream = await request.GetRequestStreamAsync();
+            cancellationToken.ThrowIfCancellationRequested();
             var fileStream = new MemoryStream();
             fileData.CopyTo(fileStream);
-            await dataStream.WriteAsync(fileStream.ToArray(), 0, (int)fileStream.Length);
+            await dataStream.WriteAsync(fileStream.ToArray(), 0, (int)fileStream.Length, cancellationToken);
             dataStream.Close();
 
             await request.GetResponseAsync();
+            cancellationToken.ThrowIfCancellationRequested();
 
             return fileId;
         }
 
-        public override async Task<Stream> GetFile(string fileId)
+        public override async Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
         {
-            var request = await CreateRequest("GET", Options.ApiEndpoint + Container + "/" + fileId);
+            var request = await CreateRequest("GET", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
 
             try
             {
                 var response = await request.GetResponseAsync();
+                cancellationToken.ThrowIfCancellationRequested();
 
                 return response.GetResponseStream();
             }
@@ -75,38 +76,40 @@ namespace Pericia.Storage.OpenStack
             }
         }
 
-        public override async Task DeleteFile(string fileId)
+        public override async Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
-            var request = await CreateRequest("DELETE", Options.ApiEndpoint + Container + "/" + fileId);
+            var request = await CreateRequest("DELETE", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             await request.GetResponseAsync();
         }
 
 
-        public override async Task CreateContainer()
+        public override async Task CreateContainer(CancellationToken cancellationToken)
         {
-            var request = await CreateRequest("PUT", Options.ApiEndpoint + Container);
+            var request = await CreateRequest("PUT", Options.ApiEndpoint + Container, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             await request.GetResponseAsync();
         }
 
 
         #region Request helpers
-        private async Task<WebRequest> CreateRequest(string method, string url, bool useToken = true)
+        private async Task<WebRequest> CreateRequest(string method, string url, CancellationToken cancellationToken, bool useToken = true)
         {
             var request = WebRequest.Create(url);
             request.Method = method;
 
             if (useToken)
             {
-                var token = await GetToken();
+                var token = await GetToken(cancellationToken);
                 request.Headers.Add("X-Auth-Token", token);
             }
 
             return request;
         }
 
-        private async Task<WebRequest> CreatePostJsonRequest(string url, string data, bool useToken = true)
+        private async Task<WebRequest> CreatePostJsonRequest(string url, string data, CancellationToken cancellationToken, bool useToken = true)
         {
-            var request = await CreateRequest("POST", url, useToken);
+            var request = await CreateRequest("POST", url, cancellationToken, useToken);
 
             byte[] byteArray = Encoding.UTF8.GetBytes(data);
             request.ContentLength = byteArray.Length;
@@ -124,7 +127,7 @@ namespace Pericia.Storage.OpenStack
         private static string TokenId;
         private static DateTime TokenExpires = DateTime.MinValue;
 
-        private async Task<string> GetToken()
+        private async Task<string> GetToken(CancellationToken cancellationToken)
         {
             if (TokenExpires < DateTime.Now.AddMinutes(1))
             {
@@ -142,13 +145,15 @@ namespace Pericia.Storage.OpenStack
             }
 
             var auth = "{\"auth\": {\"tenantName\": \"" + Options.TenantName + "\", \"passwordCredentials\": {\"username\": \"" + Options.UserId + "\", \"password\": \"" + Options.Password + "\"}}}";
-            var request = await CreatePostJsonRequest(Options.AuthEndpoint + "tokens", auth, false);
+            var request = await CreatePostJsonRequest(Options.AuthEndpoint + "tokens", auth, cancellationToken, false);
 
             var response = await request.GetResponseAsync();
+            cancellationToken.ThrowIfCancellationRequested();
 
             using (var reader = new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
             {
                 string jsonResponse = await reader.ReadToEndAsync();
+                cancellationToken.ThrowIfCancellationRequested();
                 var objectResponse = JsonConvert.DeserializeObject<OpenStackResponse>(jsonResponse);
                 var token = objectResponse?.Access?.Token;
 

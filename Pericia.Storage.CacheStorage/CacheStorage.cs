@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Pericia.Storage.CacheStorage
@@ -18,27 +19,22 @@ namespace Pericia.Storage.CacheStorage
             _referenceStorage = referenceStorage;
             _cacheStorage = cacheStorage;
         }
-        
 
-        public Task<string> SaveFile(Stream fileData)
-        {
-            return SaveFile(fileData, Guid.NewGuid().ToString());
-        }
 
-        public async Task<string> SaveFile(Stream fileData, string fileId)
+        public async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
-            await _referenceStorage.SaveFile(fileData, fileId);
+            await _referenceStorage.SaveFile(fileData, fileId, cancellationToken);
 
             try
             {
-                await _cacheStorage.SaveFile(fileData, fileId);
+                await _cacheStorage.SaveFile(fileData, fileId, cancellationToken);
             }
             catch (Exception)
             {
                 // Cache problem ? let's delete the (maybe) outdated file
                 try
                 {
-                    await _cacheStorage.DeleteFile(fileId);
+                    await _cacheStorage.DeleteFile(fileId, CancellationToken.None);
                 }
                 catch (Exception)
                 {
@@ -49,11 +45,11 @@ namespace Pericia.Storage.CacheStorage
             return fileId;
         }
 
-        public async Task<Stream> GetFile(string fileId)
+        public async Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
         {
             try
             {
-                var cachedFile = await _cacheStorage.GetFile(fileId);
+                var cachedFile = await _cacheStorage.GetFile(fileId, cancellationToken);
                 if (cachedFile != null)
                 {
                     return cachedFile;
@@ -65,10 +61,10 @@ namespace Pericia.Storage.CacheStorage
             }
 
             // No cached file, let's get it from reference and cache it
-            var file = await _referenceStorage.GetFile(fileId);
+            var file = await _referenceStorage.GetFile(fileId, cancellationToken);
             try
             {
-                await _cacheStorage.SaveFile(file, fileId);
+                await _cacheStorage.SaveFile(file, fileId, cancellationToken);
             }
             catch (Exception)
             {
@@ -78,23 +74,53 @@ namespace Pericia.Storage.CacheStorage
             return file;
         }
 
-        public async Task DeleteFile(string fileId)
+        public async Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
             try
             {
-                await _cacheStorage.DeleteFile(fileId);
+                await _cacheStorage.DeleteFile(fileId, cancellationToken);
             }
             catch (Exception)
             {
                 // cache error, I don't mind
             }
 
-            await _referenceStorage.DeleteFile(fileId);
+            await _referenceStorage.DeleteFile(fileId, cancellationToken);
+        }
+
+        public Task CreateContainer(CancellationToken cancellationToken)
+        {
+            return Task.WhenAll(_referenceStorage.CreateContainer(), _cacheStorage.CreateContainer());
         }
 
         public Task CreateContainer()
         {
-            return Task.WhenAll(_referenceStorage.CreateContainer(), _cacheStorage.CreateContainer());
+            return CreateContainer(CancellationToken.None);
+        }
+
+        public Task<string> SaveFile(Stream fileData)
+        {
+            return SaveFile(fileData, Guid.NewGuid().ToString(), CancellationToken.None);
+        }
+
+        public Task<string> SaveFile(Stream fileData, string fileId)
+        {
+            return SaveFile(fileData, fileId, CancellationToken.None);
+        }
+
+        public Task<string> SaveFile(Stream fileData, CancellationToken cancellationToken)
+        {
+            return SaveFile(fileData, Guid.NewGuid().ToString(), cancellationToken);
+        }
+
+        public Task<Stream> GetFile(string fileId)
+        {
+            return GetFile(fileId, CancellationToken.None);
+        }
+
+        public Task DeleteFile(string fileId)
+        {
+            return DeleteFile(fileId, CancellationToken.None);
         }
     }
 }

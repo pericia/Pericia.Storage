@@ -1,13 +1,14 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
-using Amazon;
+﻿using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Amazon.S3.Util;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Pericia.Storage.Aws
 {
@@ -42,24 +43,19 @@ namespace Pericia.Storage.Aws
             });
         }
 
-        public override Task<string> SaveFile(Stream fileData)
-        {
-            return SaveFile(fileData, Guid.NewGuid().ToString());
-        }
-
-        public override async Task<string> SaveFile(Stream fileData, string fileId)
+        public override async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
             using (var memStream = new MemoryStream())
             {
                 fileData.CopyTo(memStream);
                 var fileTransferUtility = new TransferUtility(_s3Client.Value);
-                await fileTransferUtility.UploadAsync(memStream, Container, fileId);
+                await fileTransferUtility.UploadAsync(memStream, Container, fileId, cancellationToken);
             }
 
             return fileId;
         }
 
-        public override async Task<Stream> GetFile(string fileId)
+        public override async Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
         {
             try
             {
@@ -69,7 +65,7 @@ namespace Pericia.Storage.Aws
                     Key = fileId
                 };
 
-                var response = await _s3Client.Value.GetObjectAsync(request);
+                var response = await _s3Client.Value.GetObjectAsync(request, cancellationToken);
                 var memStream = new MemoryStream();
                 response.ResponseStream.CopyTo(memStream);
                 return memStream;
@@ -86,12 +82,12 @@ namespace Pericia.Storage.Aws
             }
         }
 
-        public override Task DeleteFile(string fileId)
+        public override Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
-            return _s3Client.Value.DeleteObjectAsync(Container, fileId);
+            return _s3Client.Value.DeleteObjectAsync(Container, fileId, cancellationToken);
         }
 
-        public override async Task CreateContainer()
+        public override async Task CreateContainer(CancellationToken cancellationToken)
         {
             if (!(await AmazonS3Util.DoesS3BucketExistAsync(_s3Client.Value, Container)))
             {
@@ -101,7 +97,7 @@ namespace Pericia.Storage.Aws
                     UseClientRegion = true
                 };
 
-                PutBucketResponse putBucketResponse = await _s3Client.Value.PutBucketAsync(putBucketRequest);
+                PutBucketResponse putBucketResponse = await _s3Client.Value.PutBucketAsync(putBucketRequest, cancellationToken);
             }
         }
     }

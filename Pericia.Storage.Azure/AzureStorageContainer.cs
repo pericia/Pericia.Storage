@@ -1,8 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage;
+﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Pericia.Storage.Azure
 {
@@ -30,33 +31,29 @@ namespace Pericia.Storage.Azure
             });
         }
 
-        public override Task<string> SaveFile(Stream fileData)
-        {
-            return SaveFile(fileData, Guid.NewGuid().ToString());
-        }
 
-        public override async Task<string> SaveFile(Stream fileData, string fileId)
+        public override async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
             CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
-            await cloudBlockBlob.UploadFromStreamAsync(fileData);
+            await cloudBlockBlob.UploadFromStreamAsync(fileData, default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken);
             return fileId;
         }
 
-        public override Task<Stream> GetFile(string fileId)
+        public override Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
         {
             CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
-            return cloudBlockBlob.OpenReadAsync();
+            return cloudBlockBlob.OpenReadAsync(default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken);
         }
 
-        public override Task DeleteFile(string fileId)
+        public override Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
             CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
-            return cloudBlockBlob.DeleteIfExistsAsync();
+            return cloudBlockBlob.DeleteIfExistsAsync(default(DeleteSnapshotsOption), default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken);
         }
 
-        public override Task CreateContainer()
+        public override Task CreateContainer(CancellationToken cancellationToken)
         {
-            return _cloudBlobContainer.Value.CreateIfNotExistsAsync();
+            return _cloudBlobContainer.Value.CreateIfNotExistsAsync(default(BlobContainerPublicAccessType), default(BlobRequestOptions), default(OperationContext), cancellationToken);
         }
     }
 }
