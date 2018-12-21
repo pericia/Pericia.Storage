@@ -30,7 +30,7 @@ namespace Pericia.Storage.OpenStack
             }
 
             var url = Options.ApiEndpoint + Container + "/" + fileId;
-            var request = await CreateRequest("PUT", url, cancellationToken);
+            var request = await CreateRequest("PUT", url, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
 
             if (request == null)
@@ -38,14 +38,14 @@ namespace Pericia.Storage.OpenStack
                 throw new Exception("OpenStackStorage.SaveFile : Error on request - url : " + url + " - request is null");
             }
 
-            Stream dataStream = await request.GetRequestStreamAsync();
+            Stream dataStream = await request.GetRequestStreamAsync().ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
             var fileStream = new MemoryStream();
             fileData.CopyTo(fileStream);
-            await dataStream.WriteAsync(fileStream.ToArray(), 0, (int)fileStream.Length, cancellationToken);
+            await dataStream.WriteAsync(fileStream.ToArray(), 0, (int)fileStream.Length, cancellationToken).ConfigureAwait(false);
             dataStream.Close();
 
-            await request.GetResponseAsync();
+            await request.GetResponseAsync().ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
 
             return fileId;
@@ -53,12 +53,12 @@ namespace Pericia.Storage.OpenStack
 
         public override async Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
         {
-            var request = await CreateRequest("GET", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken);
+            var request = await CreateRequest("GET", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
 
             try
             {
-                var response = await request.GetResponseAsync();
+                var response = await request.GetResponseAsync().ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
 
                 return response.GetResponseStream();
@@ -78,17 +78,17 @@ namespace Pericia.Storage.OpenStack
 
         public override async Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
-            var request = await CreateRequest("DELETE", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken);
+            var request = await CreateRequest("DELETE", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
-            await request.GetResponseAsync();
+            await request.GetResponseAsync().ConfigureAwait(false);
         }
 
 
         public override async Task CreateContainer(CancellationToken cancellationToken)
         {
-            var request = await CreateRequest("PUT", Options.ApiEndpoint + Container, cancellationToken);
+            var request = await CreateRequest("PUT", Options.ApiEndpoint + Container, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
-            await request.GetResponseAsync();
+            await request.GetResponseAsync().ConfigureAwait(false);
         }
 
 
@@ -100,7 +100,7 @@ namespace Pericia.Storage.OpenStack
 
             if (useToken)
             {
-                var token = await GetToken(cancellationToken);
+                var token = await GetToken(cancellationToken).ConfigureAwait(false);
                 request.Headers.Add("X-Auth-Token", token);
             }
 
@@ -109,14 +109,14 @@ namespace Pericia.Storage.OpenStack
 
         private async Task<WebRequest> CreatePostJsonRequest(string url, string data, CancellationToken cancellationToken, bool useToken = true)
         {
-            var request = await CreateRequest("POST", url, cancellationToken, useToken);
+            var request = await CreateRequest("POST", url, cancellationToken, useToken).ConfigureAwait(false);
 
             byte[] byteArray = Encoding.UTF8.GetBytes(data);
             request.ContentLength = byteArray.Length;
             request.ContentType = "application/json";
 
-            Stream dataStream = await request.GetRequestStreamAsync();
-            await dataStream.WriteAsync(byteArray, 0, byteArray.Length);
+            Stream dataStream = await request.GetRequestStreamAsync().ConfigureAwait(false);
+            await dataStream.WriteAsync(byteArray, 0, byteArray.Length).ConfigureAwait(false);
             dataStream.Close();
 
             return request;
@@ -145,14 +145,14 @@ namespace Pericia.Storage.OpenStack
             }
 
             var auth = "{\"auth\": {\"tenantName\": \"" + Options.TenantName + "\", \"passwordCredentials\": {\"username\": \"" + Options.UserId + "\", \"password\": \"" + Options.Password + "\"}}}";
-            var request = await CreatePostJsonRequest(Options.AuthEndpoint + "tokens", auth, cancellationToken, false);
+            var request = await CreatePostJsonRequest(Options.AuthEndpoint + "tokens", auth, cancellationToken, false).ConfigureAwait(false);
 
-            var response = await request.GetResponseAsync();
+            var response = await request.GetResponseAsync().ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
 
             using (var reader = new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
             {
-                string jsonResponse = await reader.ReadToEndAsync();
+                string jsonResponse = await reader.ReadToEndAsync().ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
                 var objectResponse = JsonConvert.DeserializeObject<OpenStackResponse>(jsonResponse);
                 var token = objectResponse?.Access?.Token;

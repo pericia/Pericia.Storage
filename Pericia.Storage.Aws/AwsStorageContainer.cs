@@ -24,7 +24,7 @@ namespace Pericia.Storage.Aws
 
         public AwsStorageContainer(AwsStorageOptions options, string container)
         {
-            this.Options = Options;
+            this.Options = options;
             this.Container = container;
             _s3Client = new Lazy<IAmazonS3>(() =>
             {
@@ -49,7 +49,7 @@ namespace Pericia.Storage.Aws
             {
                 fileData.CopyTo(memStream);
                 var fileTransferUtility = new TransferUtility(_s3Client.Value);
-                await fileTransferUtility.UploadAsync(memStream, Container, fileId, cancellationToken);
+                await fileTransferUtility.UploadAsync(memStream, Container, fileId, cancellationToken).ConfigureAwait(false);
             }
 
             return fileId;
@@ -65,7 +65,7 @@ namespace Pericia.Storage.Aws
                     Key = fileId
                 };
 
-                var response = await _s3Client.Value.GetObjectAsync(request, cancellationToken);
+                var response = await _s3Client.Value.GetObjectAsync(request, cancellationToken).ConfigureAwait(false);
                 var memStream = new MemoryStream();
                 response.ResponseStream.CopyTo(memStream);
                 return memStream;
@@ -89,7 +89,7 @@ namespace Pericia.Storage.Aws
 
         public override async Task CreateContainer(CancellationToken cancellationToken)
         {
-            if (!(await AmazonS3Util.DoesS3BucketExistAsync(_s3Client.Value, Container)))
+            if (!await AmazonS3Util.DoesS3BucketExistAsync(_s3Client.Value, Container).ConfigureAwait(false))
             {
                 var putBucketRequest = new PutBucketRequest
                 {
@@ -97,7 +97,7 @@ namespace Pericia.Storage.Aws
                     UseClientRegion = true
                 };
 
-                PutBucketResponse putBucketResponse = await _s3Client.Value.PutBucketAsync(putBucketRequest, cancellationToken);
+                PutBucketResponse putBucketResponse = await _s3Client.Value.PutBucketAsync(putBucketRequest, cancellationToken).ConfigureAwait(false);
             }
         }
     }

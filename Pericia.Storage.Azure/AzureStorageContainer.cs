@@ -18,7 +18,7 @@ namespace Pericia.Storage.Azure
 
         public AzureStorageContainer(AzureStorageOptions options, string container)
         {
-            this.Options = Options;
+            this.Options = options;
             this.Container = container;
             _cloudBlobContainer = new Lazy<CloudBlobContainer>(() =>
             {
@@ -35,7 +35,7 @@ namespace Pericia.Storage.Azure
         public override async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
             CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
-            await cloudBlockBlob.UploadFromStreamAsync(fileData, default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken);
+            await cloudBlockBlob.UploadFromStreamAsync(fileData, default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken).ConfigureAwait(false);
             return fileId;
         }
 

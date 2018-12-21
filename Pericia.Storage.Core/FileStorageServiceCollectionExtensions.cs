@@ -52,7 +52,7 @@ namespace Microsoft.Extensions.DependencyInjection
             where TFileStorageOptions : FileStorageOptions, new()
         {
             var section = configuration.GetSection("Pericia.Storage");
-            return builder.AddService<TFileStorage, TFileStorageOptions>(section);
+            return builder.AddService<TFileStorage, TFileStorageOptions>(section, providerName);
         }
 
         private static void RegisterFileStorageProvider<TFileStorage, TFileStorageOptions>(FileStorageServiceBuilder builder, TFileStorageOptions options)

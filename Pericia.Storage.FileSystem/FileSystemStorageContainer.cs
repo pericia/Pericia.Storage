@@ -48,8 +48,8 @@ namespace Pericia.Storage.FileSystem
 
             using (var stream = File.Create(filePath))
             {
-                await fileData.CopyToAsync(stream, 81920, cancellationToken);
-                await stream.FlushAsync();
+                await fileData.CopyToAsync(stream, 81920, cancellationToken).ConfigureAwait(false);
+                await stream.FlushAsync().ConfigureAwait(false);
             }
 
             return fileId;

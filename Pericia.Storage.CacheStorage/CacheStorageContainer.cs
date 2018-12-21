@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pericia.Storage.CacheStorage
 {
-    public class CacheStorage : IFileStorageContainer
+    public sealed class CacheStorageContainer : IFileStorageContainer
     {
         private readonly IFileStorageContainer _referenceStorage;
         private readonly IFileStorageContainer _cacheStorage;
@@ -14,7 +14,7 @@ namespace Pericia.Storage.CacheStorage
         string IFileStorageContainer.Container { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
 
 
-        public CacheStorage(IFileStorageContainer referenceStorage, IFileStorageContainer cacheStorage)
+        public CacheStorageContainer(IFileStorageContainer referenceStorage, IFileStorageContainer cacheStorage)
         {
             _referenceStorage = referenceStorage;
             _cacheStorage = cacheStorage;
@@ -23,18 +23,18 @@ namespace Pericia.Storage.CacheStorage
 
         public async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
-            await _referenceStorage.SaveFile(fileData, fileId, cancellationToken);
+            await _referenceStorage.SaveFile(fileData, fileId, cancellationToken).ConfigureAwait(false);
 
             try
             {
-                await _cacheStorage.SaveFile(fileData, fileId, cancellationToken);
+                await _cacheStorage.SaveFile(fileData, fileId, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
                 // Cache problem ? let's delete the (maybe) outdated file
                 try
                 {
-                    await _cacheStorage.DeleteFile(fileId, CancellationToken.None);
+                    await _cacheStorage.DeleteFile(fileId, CancellationToken.None).ConfigureAwait(false);
                 }
                 catch (Exception)
                 {
@@ -49,7 +49,7 @@ namespace Pericia.Storage.CacheStorage
         {
             try
             {
-                var cachedFile = await _cacheStorage.GetFile(fileId, cancellationToken);
+                var cachedFile = await _cacheStorage.GetFile(fileId, cancellationToken).ConfigureAwait(false);
                 if (cachedFile != null)
                 {
                     return cachedFile;
@@ -61,10 +61,10 @@ namespace Pericia.Storage.CacheStorage
             }
 
             // No cached file, let's get it from reference and cache it
-            var file = await _referenceStorage.GetFile(fileId, cancellationToken);
+            var file = await _referenceStorage.GetFile(fileId, cancellationToken).ConfigureAwait(false);
             try
             {
-                await _cacheStorage.SaveFile(file, fileId, cancellationToken);
+                await _cacheStorage.SaveFile(file, fileId, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -78,14 +78,14 @@ namespace Pericia.Storage.CacheStorage
         {
             try
             {
-                await _cacheStorage.DeleteFile(fileId, cancellationToken);
+                await _cacheStorage.DeleteFile(fileId, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception)
             {
                 // cache error, I don't mind
             }
 
-            await _referenceStorage.DeleteFile(fileId, cancellationToken);
+            await _referenceStorage.DeleteFile(fileId, cancellationToken).ConfigureAwait(false);
         }
 
         public Task CreateContainer(CancellationToken cancellationToken)
