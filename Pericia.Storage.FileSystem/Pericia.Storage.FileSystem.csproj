@@ -7,9 +7,9 @@
     <Authors>Guillaume Lacasa</Authors>
     <Company>Pericia</Company>
     <Description>Pericia.Storage provider for local file system</Description>
-    <PackageLicenseUrl>https://pericia.visualstudio.com/_git/Pericia.Storage?path=%2FLICENSE.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://pericia.visualstudio.com/Pericia.Storage</PackageProjectUrl>
-    <RepositoryUrl>https://pericia.visualstudio.com/Pericia.Storage/_git/Pericia.Storage</RepositoryUrl>
+    <PackageLicenseUrl>https://dev.azure.com/pericia/_git/Pericia.Storage?path=%2FLICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://dev.azure.com/pericia/Pericia.Storage</PackageProjectUrl>
+    <RepositoryUrl>https://dev.azure.com/pericia/Pericia.Storage/_git/Pericia.Storage</RepositoryUrl>
     <AssemblyOriginatorKeyFile>../pericia.storage.snk</AssemblyOriginatorKeyFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

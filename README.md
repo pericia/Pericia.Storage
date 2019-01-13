@@ -1,6 +1,6 @@
 # Pericia.Storage
 
-[![Build status](https://pericia.visualstudio.com/Pericia.Storage/_apis/build/status/Pericia.FileStorage-CI)](https://pericia.visualstudio.com/Pericia.Storage/_build/latest?definitionId=3)
+[![Build status](https://dev.azure.com/pericia/Pericia.Storage/_apis/build/status/Pericia.Storage-CI)](https://dev.azure.com/pericia/Pericia.Storage/_build/latest?definitionId=3)
 
 Storage abstraction to store file in local file system or cloud storage. 
 
