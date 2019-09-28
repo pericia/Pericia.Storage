@@ -10,19 +10,13 @@ namespace Pericia.Storage
     public abstract class BaseFileStorageContainer<TOptions> : IFileStorageContainer
         where TOptions : FileStorageOptions
     {
-        public string Container { get; set; }
+        public string Container { get; set; } = default!;
 
-        public TOptions Options { get; set; }
+        public TOptions Options { get; set; } = default!;
         FileStorageOptions IFileStorageContainer.Options
         {
-            get
-            {
-                return Options;
-            }
-            set
-            {
-                Options = (TOptions)value;
-            }
+            get => Options;
+            set => Options = (TOptions)value;
         }
 
         public virtual Task CreateContainer()
@@ -39,11 +33,11 @@ namespace Pericia.Storage
         public abstract Task DeleteFile(string fileId, CancellationToken cancellationToken);
 
 
-        public virtual Task<Stream> GetFile(string fileId)
+        public virtual Task<Stream?> GetFile(string fileId)
         {
             return GetFile(fileId, CancellationToken.None);
         }
-        public abstract Task<Stream> GetFile(string fileId, CancellationToken cancellationToken);
+        public abstract Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken);
 
 
         public virtual Task<string> SaveFile(Stream fileData)

@@ -9,13 +9,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class FileStorageServiceCollectionExtensions
     {
-        public static FileStorageServiceBuilder AddStorage(this IServiceCollection services, Action<FileStorageOptions> storageOptionsConfig = null)
+        public static FileStorageServiceBuilder AddStorage(this IServiceCollection services, Action<FileStorageOptions>? storageOptionsConfig = null)
         {
-            return new FileStorageServiceBuilder()
-            {
-                Services = services,
-                OptionsConfig = storageOptionsConfig,
-            };
+            return new FileStorageServiceBuilder(services, storageOptionsConfig);
         }
 
         public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, Action<TFileStorageOptions> storageOptionsConfig)
@@ -30,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
-        public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, IConfigurationSection configuration, string providerName = null)
+        public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, IConfigurationSection configuration, string? providerName = null)
             where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions, new()
         {
@@ -47,7 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
-        public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, IConfiguration configuration, string providerName = null)
+        public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, IConfiguration configuration, string? providerName = null)
             where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions, new()
         {

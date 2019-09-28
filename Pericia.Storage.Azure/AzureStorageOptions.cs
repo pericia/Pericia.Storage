@@ -6,6 +6,6 @@ namespace Pericia.Storage.Azure
 {
     public class AzureStorageOptions : FileStorageOptions
     {
-        public string ConnectionString { get; set; }
+        public string ConnectionString { get; set; } = string.Empty;
     }
 }

@@ -18,7 +18,7 @@ namespace Pericia.Storage.Aws
         private Lazy<IAmazonS3> _s3Client;
 
         public AwsStorageContainer()
-            : this(null, null)
+            : this(default!, default!)
         {
         }
 
@@ -30,14 +30,12 @@ namespace Pericia.Storage.Aws
             {
                 var credentials = new BasicAWSCredentials(Options.AccessKey, Options.SecretKey);
                 RegionEndpoint region;
-                try
-                {
-                    region = (RegionEndpoint)typeof(RegionEndpoint).GetField("EUWest3").GetValue(null);
-                }
-                catch (Exception)
+                var regionField = typeof(RegionEndpoint).GetField(Options.RegionEndpoint);
+                if (regionField == null)
                 {
                     throw new Exception("Incorrect AWS region");
                 }
+                region = (RegionEndpoint)regionField.GetValue(null);
 
                 return new AmazonS3Client(credentials, region);
             });
@@ -55,7 +53,7 @@ namespace Pericia.Storage.Aws
             return fileId;
         }
 
-        public override async Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
+        public override async Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
             try
             {

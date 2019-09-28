@@ -51,7 +51,7 @@ namespace Pericia.Storage.OpenStack
             return fileId;
         }
 
-        public override async Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
+        public override async Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
             var request = await CreateRequest("GET", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
@@ -124,7 +124,7 @@ namespace Pericia.Storage.OpenStack
         #endregion
 
         #region Token
-        private static string TokenId;
+        private static string? TokenId;
         private static DateTime TokenExpires = DateTime.MinValue;
 
         private async Task<string> GetToken(CancellationToken cancellationToken)
@@ -132,11 +132,6 @@ namespace Pericia.Storage.OpenStack
             if (TokenExpires < DateTime.Now.AddMinutes(1))
             {
                 TokenId = null;
-            }
-
-            if (TokenId != null)
-            {
-                return TokenId;
             }
 
             if (TokenId != null)
@@ -167,7 +162,7 @@ namespace Pericia.Storage.OpenStack
             }
 
 
-            return "";
+            return string.Empty;
         }
         #endregion
     }

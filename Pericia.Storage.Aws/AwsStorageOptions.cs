@@ -6,10 +6,10 @@ namespace Pericia.Storage.Aws
 {
     public class AwsStorageOptions : FileStorageOptions
     {
-        public string AccessKey { get; set; }
+        public string AccessKey { get; set; } = string.Empty;
 
-        public string SecretKey { get; set; }
+        public string SecretKey { get; set; } = string.Empty;
 
-        public string RegionEndpoint { get; set; }
+        public string RegionEndpoint { get; set; } = string.Empty;
     }
 }

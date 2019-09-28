@@ -12,7 +12,7 @@ namespace Pericia.Storage.Azure
         private Lazy<CloudBlobContainer> _cloudBlobContainer;
 
         public AzureStorageContainer()
-            : this(null, null)
+            : this(default!, default!)
         {
         }
 
@@ -22,12 +22,9 @@ namespace Pericia.Storage.Azure
             this.Container = container;
             _cloudBlobContainer = new Lazy<CloudBlobContainer>(() =>
             {
-                if (CloudStorageAccount.TryParse(this.Options.ConnectionString, out var storageAccount))
-                {
-                    CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
-                    return cloudBlobClient.GetContainerReference(this.Container);
-                }
-                return null;
+                var storageAccount = CloudStorageAccount.Parse(Options.ConnectionString);
+                CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
+                return cloudBlobClient.GetContainerReference(this.Container);
             });
         }
 
@@ -39,7 +36,7 @@ namespace Pericia.Storage.Azure
             return fileId;
         }
 
-        public override Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
+        public override Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
             CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
             return cloudBlockBlob.OpenReadAsync(default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken);

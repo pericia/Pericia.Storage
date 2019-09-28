@@ -21,9 +21,9 @@ namespace Pericia.Storage
 
         Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken);
 
-        Task<Stream> GetFile(string fileId);
+        Task<Stream?> GetFile(string fileId);
 
-        Task<Stream> GetFile(string fileId, CancellationToken cancellationToken);
+        Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken);
 
         Task DeleteFile(string fileId);
 

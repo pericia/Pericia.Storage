@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Pericia.Storage.CacheStorage
 {
+#pragma warning disable CA1031 // Do not catch general exception types
     public sealed class CacheStorageContainer : IFileStorageContainer
     {
         private readonly IFileStorageContainer _referenceStorage;
@@ -19,7 +20,6 @@ namespace Pericia.Storage.CacheStorage
             _referenceStorage = referenceStorage;
             _cacheStorage = cacheStorage;
         }
-
 
         public async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
@@ -45,7 +45,7 @@ namespace Pericia.Storage.CacheStorage
             return fileId;
         }
 
-        public async Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
+        public async Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
             try
             {
@@ -62,13 +62,16 @@ namespace Pericia.Storage.CacheStorage
 
             // No cached file, let's get it from reference and cache it
             var file = await _referenceStorage.GetFile(fileId, cancellationToken).ConfigureAwait(false);
-            try
+            if (file != null)
             {
-                await _cacheStorage.SaveFile(file, fileId, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception)
-            {
-                // cache error, I don't mind
+                try
+                {
+                    await _cacheStorage.SaveFile(file, fileId, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    // cache error, I don't mind
+                }
             }
 
             return file;
@@ -113,7 +116,7 @@ namespace Pericia.Storage.CacheStorage
             return SaveFile(fileData, Guid.NewGuid().ToString(), cancellationToken);
         }
 
-        public Task<Stream> GetFile(string fileId)
+        public Task<Stream?> GetFile(string fileId)
         {
             return GetFile(fileId, CancellationToken.None);
         }
@@ -124,3 +127,4 @@ namespace Pericia.Storage.CacheStorage
         }
     }
 }
+#pragma warning restore CA1031 // Do not catch general exception types

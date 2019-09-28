@@ -17,35 +17,25 @@ namespace Pericia.Storage.Tests
             {
                 Path = @"C:\Temp\"
             };
-            var fileStorage = new FileSystemStorageContainer
-            {
-                Options = options,
-                Container= "TestContainer"
-            };
+            var fileStorage = new FileSystemStorageContainer(options, "TestContainer");
 
-            string fileId;
-            using (var memoryStream = new MemoryStream())
-            {
-                using (var writer = new StreamWriter(memoryStream))
-                {
-                    writer.WriteLine(TestLine);
-                    writer.Flush();
+            using var memoryStream = new MemoryStream();
+            using var writer = new StreamWriter(memoryStream);
 
-                    memoryStream.Position = 0;
-                    fileId = await fileStorage.SaveFile(memoryStream);
-                    Assert.NotNull(fileId);
-                }
-            }
+            writer.WriteLine(TestLine);
+            writer.Flush();
 
-            using (var fileStream = await fileStorage.GetFile(fileId))
-            {
-                using (var reader = new StreamReader(fileStream))
-                {
-                    string line = reader.ReadLine();
-                    Assert.Equal(TestLine, line);
-                }
-            }
+            memoryStream.Position = 0;
+            var fileId = await fileStorage.SaveFile(memoryStream);
+            Assert.NotNull(fileId);
 
+            using var fileStream = await fileStorage.GetFile(fileId);
+            Assert.NotNull(fileStream);
+
+            using var reader = new StreamReader(fileStream??default!);
+            var line = reader.ReadLine();
+            Assert.Equal(TestLine, line);
+                       
             await fileStorage.DeleteFile(fileId);
             var nullFileStream = await fileStorage.GetFile(fileId);
             Assert.Null(nullFileStream);

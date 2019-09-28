@@ -8,6 +8,11 @@ namespace Pericia.Storage
         where TContainer : IFileStorageContainer, new()
         where TOptions : FileStorageOptions
     {
+        protected BaseFileStorage(TOptions options)
+        {
+            Options = options;
+        }
+
         public TOptions Options { get; set; }
         FileStorageOptions IFileStorage.Options
         {

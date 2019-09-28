@@ -55,16 +55,16 @@ namespace Pericia.Storage.FileSystem
             return fileId;
         }
 
-        public override Task<Stream> GetFile(string fileId, CancellationToken cancellationToken)
+        public override Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
             var filePath = Path.Combine(_folder, fileId);
 
             if (File.Exists(filePath))
             {
-                return Task.FromResult((Stream)File.OpenRead(filePath));
+                return Task.FromResult((Stream?)File.OpenRead(filePath));
             }
 
-            return Task.FromResult<Stream>(null);
+            return Task.FromResult<Stream?>(null);
         }
 
         public override Task DeleteFile(string fileId, CancellationToken cancellationToken)
