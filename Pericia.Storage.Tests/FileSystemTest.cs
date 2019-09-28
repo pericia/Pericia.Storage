@@ -32,10 +32,10 @@ namespace Pericia.Storage.Tests
             using var fileStream = await fileStorage.GetFile(fileId);
             Assert.NotNull(fileStream);
 
-            using var reader = new StreamReader(fileStream??default!);
+            using var reader = new StreamReader(fileStream ?? default!);
             var line = reader.ReadLine();
             Assert.Equal(TestLine, line);
-                       
+
             await fileStorage.DeleteFile(fileId);
             var nullFileStream = await fileStorage.GetFile(fileId);
             Assert.Null(nullFileStream);
