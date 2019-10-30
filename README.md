@@ -10,6 +10,7 @@ Providers available for :
 - OpenStack
 - Azure Blobs
 - AWS S3
+- In-memory
 
 ## How to use
 
@@ -105,3 +106,9 @@ The only option needed is the `ConnectionString`
 Saves the files to AWS S3.
 
 The options needed are the `AccessKey`, `SecretKey` and the `RegionEndpoint`
+
+### In-memory
+
+[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.InMemory.svg)](https://www.nuget.org/packages/Pericia.Storage.InMemory/)
+
+Store data in-memory - for testing purpose.
