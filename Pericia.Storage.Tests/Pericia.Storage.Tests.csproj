@@ -18,5 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Pericia.Storage.Core\Pericia.Storage.Core.csproj" />
     <ProjectReference Include="..\Pericia.Storage.FileSystem\Pericia.Storage.FileSystem.csproj" />
+    <ProjectReference Include="..\Pericia.Storage.InMemory\Pericia.Storage.InMemory.csproj" />
   </ItemGroup>
 </Project>

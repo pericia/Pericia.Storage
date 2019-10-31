@@ -1,25 +1,23 @@
-﻿using Pericia.Storage.FileSystem;
+﻿using Pericia.Storage.InMemory;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Pericia.Storage.Tests
 {
-    public class FileSystemTest
+    public class MemoryTest
     {
         private string TestLine = Guid.NewGuid().ToString();
 
         [Fact]
         public async Task SaveFile()
-        {
-            var options = new FileSystemStorageOptions
-            {
-                Path = Path.GetTempPath()
-            };
-            var fileStorage = new FileSystemStorageContainer(options, "TestContainer");
+        {          
+            var fileStorage = new InMemoryStorageContainer();
             string fileId;
-            
+
             {
                 using var memoryStream = new MemoryStream();
                 using var writer = new StreamWriter(memoryStream);
@@ -28,7 +26,7 @@ namespace Pericia.Storage.Tests
                 writer.Flush();
 
                 memoryStream.Position = 0;
-                fileId = await fileStorage.SaveFile(memoryStream);
+                 fileId = await fileStorage.SaveFile(memoryStream);
                 Assert.NotNull(fileId);
             }
 

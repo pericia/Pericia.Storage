@@ -27,7 +27,7 @@ namespace Pericia.Storage
         }
 
 
-        public IFileStorageContainer GetContainer(string container)
+        public virtual IFileStorageContainer GetContainer(string container)
         {
             var containerService = new TContainer();
             containerService.Options = this.Options;

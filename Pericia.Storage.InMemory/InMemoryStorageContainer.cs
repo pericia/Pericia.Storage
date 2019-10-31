@@ -51,6 +51,7 @@ namespace Pericia.Storage.InMemory
 
             var stream = new MemoryStream();
             await fileData.CopyToAsync(stream, 81920, cancellationToken).ConfigureAwait(false);
+            stream.Position = 0;
 
             files[fileId] = stream;
 
