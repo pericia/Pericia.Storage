@@ -6,19 +6,19 @@ using Newtonsoft.Json;
 namespace Pericia.Storage.OpenStack
 {
 #pragma warning disable CA1812 // Classes are not directly instantiated, but they are deserialized from json
-    internal class OpenStackResponse
+    internal class OpenStackResponseV2
     {
         [JsonProperty("access")]
-        public Access Access { get; set; } = default!;
+        public AccessV2 Access { get; set; } = default!;
     }
 
-    internal class Access
+    internal class AccessV2
     {
         [JsonProperty("token")]
-        public Token Token { get; set; } = default!;
+        public TokenV2 Token { get; set; } = default!;
     }
 
-    internal class Token
+    internal class TokenV2
     {
         [JsonProperty("issued_at")]
         public DateTime IssuedAt { get; set; }

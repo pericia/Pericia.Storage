@@ -124,10 +124,10 @@ namespace Pericia.Storage.OpenStack
         #endregion
 
         #region Token
-        private static string? TokenId;
-        private static DateTime TokenExpires = DateTime.MinValue;
+        private string? TokenId;
+        private DateTime TokenExpires = DateTime.MinValue;
 
-        private async Task<string> GetToken(CancellationToken cancellationToken)
+        private Task<string> GetToken(CancellationToken cancellationToken)
         {
             if (TokenExpires < DateTime.Now.AddMinutes(1))
             {
@@ -136,9 +136,51 @@ namespace Pericia.Storage.OpenStack
 
             if (TokenId != null)
             {
-                return TokenId;
+                return Task.FromResult(TokenId);
             }
 
+            switch (Options.ApiVersion)
+            {
+                case OpenStackIdentityApiVersion.V2:
+                    return GetTokenV2(cancellationToken);
+
+                case OpenStackIdentityApiVersion.V3:
+                default:
+                    return GetTokenV3(cancellationToken);
+            }
+        }
+
+        private async Task<string> GetTokenV3(CancellationToken cancellationToken)
+        {
+            var auth = "{ \"auth\": { \"identity\": { \"methods\": [\"password\"], \"password\": { \"user\": { \"name\": \"" + Options.UserId + "\", \"domain\": { \"id\": \"default\" }, \"password\": \"" + Options.Password + "\" } } }, \"scope\": { \"project\": { \"name\": \"" + Options.TenantName + "\", \"domain\": { \"id\": \"default\" } } } } }";
+            var request = await CreatePostJsonRequest(Options.AuthEndpoint + "/auth/tokens", auth, cancellationToken, false).ConfigureAwait(false);
+
+            var response = await request.GetResponseAsync().ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var reader = new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
+            {
+                string jsonResponse = await reader.ReadToEndAsync().ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+                var objectResponse = JsonConvert.DeserializeObject<OpenStackResponseV3>(jsonResponse);
+
+                var tokenId = response.Headers["X-Subject-Token"];
+                var expires = objectResponse?.Token?.Expires;
+
+                if (tokenId != null && expires!=null)
+                {
+                    TokenId = tokenId;
+                    TokenExpires = expires.Value;
+
+                    return TokenId;
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private async Task<string> GetTokenV2(CancellationToken cancellationToken)
+        {
             var auth = "{\"auth\": {\"tenantName\": \"" + Options.TenantName + "\", \"passwordCredentials\": {\"username\": \"" + Options.UserId + "\", \"password\": \"" + Options.Password + "\"}}}";
             var request = await CreatePostJsonRequest(Options.AuthEndpoint + "tokens", auth, cancellationToken, false).ConfigureAwait(false);
 
@@ -149,7 +191,7 @@ namespace Pericia.Storage.OpenStack
             {
                 string jsonResponse = await reader.ReadToEndAsync().ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
-                var objectResponse = JsonConvert.DeserializeObject<OpenStackResponse>(jsonResponse);
+                var objectResponse = JsonConvert.DeserializeObject<OpenStackResponseV2>(jsonResponse);
                 var token = objectResponse?.Access?.Token;
 
                 if (token != null)
