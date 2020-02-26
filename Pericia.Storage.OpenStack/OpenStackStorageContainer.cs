@@ -139,12 +139,12 @@ namespace Pericia.Storage.OpenStack
                 return Task.FromResult(TokenId);
             }
 
-            switch (Options.ApiVersion)
+            switch (Options.AuthApiVersion)
             {
-                case OpenStackIdentityApiVersion.V2:
+                case 2:
                     return GetTokenV2(cancellationToken);
 
-                case OpenStackIdentityApiVersion.V3:
+                case 3:
                 default:
                     return GetTokenV3(cancellationToken);
             }

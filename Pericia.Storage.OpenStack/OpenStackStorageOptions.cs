@@ -6,9 +6,9 @@ namespace Pericia.Storage.OpenStack
 {
     public class OpenStackStorageOptions : FileStorageOptions
     {
-        public OpenStackIdentityApiVersion ApiVersion { get; set; } = OpenStackIdentityApiVersion.V3;
         // Authentication
         public string AuthEndpoint { get; set; } = string.Empty;
+        public int? AuthApiVersion { get; set; }
 
         public string TenantName { get; set; } = string.Empty;
         public string UserId { get; set; } = string.Empty;
@@ -19,9 +19,4 @@ namespace Pericia.Storage.OpenStack
 
     }
 
-    public enum OpenStackIdentityApiVersion
-    {
-        V2 = 2,
-        V3 = 3,
-    }
 }
