@@ -90,6 +90,7 @@ Saves to OpenStack. The following options are needed :
 - `TenantName`
 - `UserId`
 - `Password`
+- `AuthApiVersion` : set this value to `2` if you want to use the v2 authentication API. If not set, the V3 API will be used.
 
 ### Azure blobs
 
