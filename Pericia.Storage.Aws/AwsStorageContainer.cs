@@ -14,7 +14,6 @@ namespace Pericia.Storage.Aws
 {
     public class AwsStorageContainer : BaseFileStorageContainer<AwsStorageOptions>
     {
-        //private IAmazonS3 _s3Client;
         private Lazy<IAmazonS3> _s3Client;
 
         public AwsStorageContainer()
@@ -29,13 +28,12 @@ namespace Pericia.Storage.Aws
             _s3Client = new Lazy<IAmazonS3>(() =>
             {
                 var credentials = new BasicAWSCredentials(Options.AccessKey, Options.SecretKey);
-                RegionEndpoint region;
                 var regionField = typeof(RegionEndpoint).GetField(Options.RegionEndpoint);
                 if (regionField == null)
                 {
                     throw new Exception("Incorrect AWS region");
                 }
-                region = (RegionEndpoint)regionField.GetValue(null);
+                var region = regionField.GetValue(null) as RegionEndpoint;
 
                 return new AmazonS3Client(credentials, region);
             });
@@ -43,18 +41,21 @@ namespace Pericia.Storage.Aws
 
         public override async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
-            using (var memStream = new MemoryStream())
-            {
-                fileData.CopyTo(memStream);
-                var fileTransferUtility = new TransferUtility(_s3Client.Value);
-                await fileTransferUtility.UploadAsync(memStream, Container, fileId, cancellationToken).ConfigureAwait(false);
-            }
+            _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
+            using var memStream = new MemoryStream();
+            fileData.CopyTo(memStream);
+            using var fileTransferUtility = new TransferUtility(_s3Client.Value);
+            await fileTransferUtility.UploadAsync(memStream, Container, fileId, cancellationToken).ConfigureAwait(false);
 
             return fileId;
         }
 
         public override async Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             try
             {
                 GetObjectRequest request = new GetObjectRequest
@@ -82,12 +83,14 @@ namespace Pericia.Storage.Aws
 
         public override Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             return _s3Client.Value.DeleteObjectAsync(Container, fileId, cancellationToken);
         }
 
         public override async Task CreateContainer(CancellationToken cancellationToken)
         {
-            if (!await AmazonS3Util.DoesS3BucketExistAsync(_s3Client.Value, Container).ConfigureAwait(false))
+            if (!await AmazonS3Util.DoesS3BucketExistV2Async(_s3Client.Value, Container).ConfigureAwait(false))
             {
                 var putBucketRequest = new PutBucketRequest
                 {

@@ -19,6 +19,8 @@ namespace Pericia.Storage
 
         internal void ApplyOptions(FileStorageOptions options)
         {
+            _ = options ?? throw new ArgumentNullException(nameof(options));
+
             OptionsConfig?.Invoke(options);
         }
 

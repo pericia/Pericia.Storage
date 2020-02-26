@@ -23,6 +23,9 @@ namespace Pericia.Storage.CacheStorage
 
         public async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
+            _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             await _referenceStorage.SaveFile(fileData, fileId, cancellationToken).ConfigureAwait(false);
 
             try
@@ -47,6 +50,8 @@ namespace Pericia.Storage.CacheStorage
 
         public async Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             try
             {
                 var cachedFile = await _cacheStorage.GetFile(fileId, cancellationToken).ConfigureAwait(false);
@@ -79,6 +84,8 @@ namespace Pericia.Storage.CacheStorage
 
         public async Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             try
             {
                 await _cacheStorage.DeleteFile(fileId, cancellationToken).ConfigureAwait(false);
@@ -103,26 +110,37 @@ namespace Pericia.Storage.CacheStorage
 
         public Task<string> SaveFile(Stream fileData)
         {
+            _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
+
             return SaveFile(fileData, Guid.NewGuid().ToString(), CancellationToken.None);
         }
 
         public Task<string> SaveFile(Stream fileData, string fileId)
         {
+            _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             return SaveFile(fileData, fileId, CancellationToken.None);
         }
 
         public Task<string> SaveFile(Stream fileData, CancellationToken cancellationToken)
         {
+            _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
+
             return SaveFile(fileData, Guid.NewGuid().ToString(), cancellationToken);
         }
 
         public Task<Stream?> GetFile(string fileId)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             return GetFile(fileId, CancellationToken.None);
         }
 
         public Task DeleteFile(string fileId)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             return DeleteFile(fileId, CancellationToken.None);
         }
     }

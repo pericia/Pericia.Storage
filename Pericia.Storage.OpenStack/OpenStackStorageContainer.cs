@@ -24,10 +24,8 @@ namespace Pericia.Storage.OpenStack
 
         public override async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
-            if (fileData == null)
-            {
-                throw new ArgumentException("OpenStackStorage.SaveFile : fileData is null");
-            }
+            _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
 
             var url = Options.ApiEndpoint + Container + "/" + fileId;
             var request = await CreateRequest("PUT", url, cancellationToken).ConfigureAwait(false);
@@ -38,9 +36,10 @@ namespace Pericia.Storage.OpenStack
                 throw new Exception("OpenStackStorage.SaveFile : Error on request - url : " + url + " - request is null");
             }
 
-            Stream dataStream = await request.GetRequestStreamAsync().ConfigureAwait(false);
+            using Stream dataStream = await request.GetRequestStreamAsync().ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
-            var fileStream = new MemoryStream();
+            using var fileStream = new MemoryStream();
+
             fileData.CopyTo(fileStream);
             await dataStream.WriteAsync(fileStream.ToArray(), 0, (int)fileStream.Length, cancellationToken).ConfigureAwait(false);
             dataStream.Close();
@@ -49,10 +48,13 @@ namespace Pericia.Storage.OpenStack
             cancellationToken.ThrowIfCancellationRequested();
 
             return fileId;
+
         }
 
         public override async Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             var request = await CreateRequest("GET", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -78,6 +80,8 @@ namespace Pericia.Storage.OpenStack
 
         public override async Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             var request = await CreateRequest("DELETE", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
             await request.GetResponseAsync().ConfigureAwait(false);
@@ -95,7 +99,7 @@ namespace Pericia.Storage.OpenStack
         #region Request helpers
         private async Task<WebRequest> CreateRequest(string method, string url, CancellationToken cancellationToken, bool useToken = true)
         {
-            var request = WebRequest.Create(url);
+            var request = WebRequest.Create(new Uri(url));
             request.Method = method;
 
             if (useToken)
@@ -167,7 +171,7 @@ namespace Pericia.Storage.OpenStack
                 var tokenId = response.Headers["X-Subject-Token"];
                 var expires = objectResponse?.Token?.Expires;
 
-                if (tokenId != null && expires!=null)
+                if (tokenId != null && expires != null)
                 {
                     TokenId = tokenId;
                     TokenExpires = expires.Value;

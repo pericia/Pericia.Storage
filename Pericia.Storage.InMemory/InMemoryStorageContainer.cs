@@ -18,6 +18,8 @@ namespace Pericia.Storage.InMemory
 
         public override Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             if (files.ContainsKey(fileId))
             {
                 files[fileId].Dispose();
@@ -29,6 +31,8 @@ namespace Pericia.Storage.InMemory
 
         public override Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             if (files.ContainsKey(fileId))
             {
                 return Task.FromResult<Stream?>(files[fileId]);
@@ -39,16 +43,9 @@ namespace Pericia.Storage.InMemory
 
         public override async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
-            if (fileData == null)
-            {
-                throw new ArgumentException("File data is mandatory", nameof(fileData));
-            }
-
-            if (string.IsNullOrWhiteSpace(fileId))
-            {
-                throw new ArgumentException("File id is mandatory", nameof(fileId));
-            }
-
+            _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+         
             var stream = new MemoryStream();
             await fileData.CopyToAsync(stream, 81920, cancellationToken).ConfigureAwait(false);
             stream.Position = 0;

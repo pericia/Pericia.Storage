@@ -30,14 +30,8 @@ namespace Pericia.Storage.FileSystem
 
         public override async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
-            if (fileData == null)
-            {
-                throw new ArgumentException("File data is mandatory", nameof(fileData));
-            }
-            if (string.IsNullOrWhiteSpace(fileId))
-            {
-                throw new ArgumentException("File id is mandatory", nameof(fileId));
-            }
+            _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
 
             var filePath = Path.Combine(_folder, fileId);
             var folder = Path.GetDirectoryName(filePath);
@@ -57,6 +51,8 @@ namespace Pericia.Storage.FileSystem
 
         public override Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             var filePath = Path.Combine(_folder, fileId);
 
             if (File.Exists(filePath))
@@ -69,6 +65,8 @@ namespace Pericia.Storage.FileSystem
 
         public override Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             var filePath = Path.Combine(_folder, fileId);
 
             if (File.Exists(filePath))

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Pericia.Storage;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Text;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -14,10 +15,12 @@ namespace Microsoft.Extensions.DependencyInjection
             return new FileStorageServiceBuilder(services, storageOptionsConfig);
         }
 
-        public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, Action<TFileStorageOptions> storageOptionsConfig)
+        public static FileStorageServiceBuilder AddService<TFileStorage, TFileStorageOptions>(this FileStorageServiceBuilder builder, Action<TFileStorageOptions>? storageOptionsConfig)
             where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions, new()
         {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
             var options = new TFileStorageOptions();
             builder.ApplyOptions(options);
             storageOptionsConfig?.Invoke(options);
@@ -30,6 +33,9 @@ namespace Microsoft.Extensions.DependencyInjection
             where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions, new()
         {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+            _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
             var options = configuration.Get<TFileStorageOptions>();
 
             if (!string.IsNullOrEmpty(providerName) && !string.IsNullOrEmpty(options.Provider) &&
@@ -47,6 +53,9 @@ namespace Microsoft.Extensions.DependencyInjection
             where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions, new()
         {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+            _ = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
             var section = configuration.GetSection("Pericia.Storage");
             return builder.AddService<TFileStorage, TFileStorageOptions>(section, providerName);
         }
@@ -55,8 +64,11 @@ namespace Microsoft.Extensions.DependencyInjection
             where TFileStorage : class, IFileStorage, new()
             where TFileStorageOptions : FileStorageOptions
         {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+            _ = options ?? throw new ArgumentNullException(nameof(options));
+
             var storage = new TFileStorage();
-            storage.Options = options;            
+            storage.Options = options;
             builder.Services.TryAddSingleton<IFileStorage>(storage);
             builder.Services.AddSingleton<TFileStorage>(storage);
             builder.LastStorageAdded = storage;
@@ -64,6 +76,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static FileStorageServiceBuilder AddContainer(this FileStorageServiceBuilder builder, string container)
         {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+            _ = container ?? throw new ArgumentNullException(nameof(container));
+
             var storage = builder.LastStorageAdded ?? throw new Exception("You must add a Storage service before adding a container");
 
             var containerService = storage.GetContainer(container);
@@ -75,6 +90,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static FileStorageServiceBuilder AddContainer(this FileStorageServiceBuilder builder)
         {
+            _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
             var storage = builder.LastStorageAdded ?? throw new Exception("You must add a Storage service before adding a container");
             var container = storage.Options?.Container ?? throw new Exception("You must define the container name");
 

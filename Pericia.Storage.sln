@@ -5,6 +5,7 @@ VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E95CDFFA-F549-4CCB-9BA0-A5591068BD40}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
 	EndProjectSection
@@ -23,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.Aws", "Peri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.CacheStorage", "Pericia.Storage.CacheStorage\Pericia.Storage.CacheStorage.csproj", "{7A7F71BF-D1E6-4E36-9C01-4416E090F750}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.Storage.InMemory", "Pericia.Storage.InMemory\Pericia.Storage.InMemory.csproj", "{0DBA2028-3340-4370-B6E2-3ABFF00D07A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.InMemory", "Pericia.Storage.InMemory\Pericia.Storage.InMemory.csproj", "{0DBA2028-3340-4370-B6E2-3ABFF00D07A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -31,6 +31,9 @@ namespace Pericia.Storage.Azure
 
         public override async Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken)
         {
+            _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
             await cloudBlockBlob.UploadFromStreamAsync(fileData, default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken).ConfigureAwait(false);
             return fileId;
@@ -38,12 +41,16 @@ namespace Pericia.Storage.Azure
 
         public override Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
             return cloudBlockBlob.OpenReadAsync(default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken);
         }
 
         public override Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
             CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
             return cloudBlockBlob.DeleteIfExistsAsync(default(DeleteSnapshotsOption), default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken);
         }
