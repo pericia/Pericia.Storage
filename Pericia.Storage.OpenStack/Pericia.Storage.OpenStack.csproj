@@ -8,7 +8,7 @@
     <DelaySign>false</DelaySign>
     <Authors>Guillaume Lacasa</Authors>
     <Company>Pericia</Company>
-    <Description>Pericia.Storage provider for AWS</Description>
+    <Description>Pericia.Storage provider for OpenStack</Description>
     <PackageLicenseUrl>https://github.com/pericia/Pericia.Storage/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/pericia/Pericia.Storage</PackageProjectUrl>
     <RepositoryUrl>https://github.com/pericia/Pericia.Storage.git</RepositoryUrl>
