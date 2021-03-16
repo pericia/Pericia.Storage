@@ -30,12 +30,7 @@ namespace Pericia.Storage.Aws
             _s3Client = new Lazy<IAmazonS3>(() =>
             {
                 var credentials = new BasicAWSCredentials(Options.AccessKey, Options.SecretKey);
-                var regionField = typeof(RegionEndpoint).GetField(Options.RegionEndpoint);
-                if (regionField == null)
-                {
-                    throw new Exception("Incorrect AWS region");
-                }
-                var region = regionField.GetValue(null) as RegionEndpoint;
+                var region = RegionEndpoint.GetBySystemName(Options.RegionEndpoint);
 
                 return new AmazonS3Client(credentials, region);
             });
