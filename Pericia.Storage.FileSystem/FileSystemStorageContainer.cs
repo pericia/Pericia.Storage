@@ -85,5 +85,14 @@ namespace Pericia.Storage.FileSystem
             }
             return Task.CompletedTask;
         }
+
+        public override Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
+            var filePath = Path.Combine(_folder, fileId);
+
+            return Task.FromResult(File.Exists(filePath));
+        }
     }
 }

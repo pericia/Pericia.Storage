@@ -28,5 +28,8 @@ namespace Pericia.Storage
         Task DeleteFile(string fileId);
 
         Task DeleteFile(string fileId, CancellationToken cancellationToken);
+
+        Task<bool> FileExists(string fileId);
+        Task<bool> FileExists(string fileId, CancellationToken cancellationToken);
     }
 }

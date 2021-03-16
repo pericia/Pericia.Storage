@@ -32,7 +32,6 @@ namespace Pericia.Storage
         }
         public abstract Task DeleteFile(string fileId, CancellationToken cancellationToken);
 
-
         public virtual Task<Stream?> GetFile(string fileId)
         {
             return GetFile(fileId, CancellationToken.None);
@@ -54,6 +53,10 @@ namespace Pericia.Storage
         }
         public abstract Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken);
 
-
+        public  Task<bool> FileExists(string fileId)
+        {
+            return FileExists(fileId, CancellationToken.None);
+        }
+        public abstract Task<bool> FileExists(string fileId, CancellationToken cancellationToken);
     }
 }

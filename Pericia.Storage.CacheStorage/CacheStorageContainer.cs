@@ -130,6 +130,12 @@ namespace Pericia.Storage.CacheStorage
             return SaveFile(fileData, Guid.NewGuid().ToString(), cancellationToken);
         }
 
+        public async Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            return await _cacheStorage.FileExists(fileId, cancellationToken)
+                   || await _referenceStorage.FileExists(fileId, cancellationToken);
+        }
+
         public Task<Stream?> GetFile(string fileId)
         {
             _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
@@ -143,6 +149,14 @@ namespace Pericia.Storage.CacheStorage
 
             return DeleteFile(fileId, CancellationToken.None);
         }
+
+        public Task<bool> FileExists(string fileId)
+        {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
+            return FileExists(fileId, CancellationToken.None);
+        }
+
     }
 }
 #pragma warning restore CA1031 // Do not catch general exception types

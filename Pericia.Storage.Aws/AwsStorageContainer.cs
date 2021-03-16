@@ -101,5 +101,32 @@ namespace Pericia.Storage.Aws
                 PutBucketResponse putBucketResponse = await _s3Client.Value.PutBucketAsync(putBucketRequest, cancellationToken).ConfigureAwait(false);
             }
         }
+
+        public override async Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
+            try
+            {
+                GetObjectRequest request = new GetObjectRequest
+                {
+                    BucketName = Container,
+                    Key = fileId
+                };
+
+                _ = await _s3Client.Value.GetObjectAsync(request, cancellationToken).ConfigureAwait(false);
+                return true;
+            }
+            catch (AmazonS3Exception ex)
+            {
+                if (ex.ErrorCode == "NoSuchKey")
+                {
+                    // Le fichier n'existe pas
+                    return false;
+                }
+
+                throw;
+            }
+        }
     }
 }

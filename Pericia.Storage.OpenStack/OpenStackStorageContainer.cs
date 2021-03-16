@@ -210,6 +210,11 @@ namespace Pericia.Storage.OpenStack
 
             return string.Empty;
         }
+
+        public override Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

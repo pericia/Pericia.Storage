@@ -59,5 +59,13 @@ namespace Pericia.Storage.Azure
         {
             return _cloudBlobContainer.Value.CreateIfNotExistsAsync(default(BlobContainerPublicAccessType), default(BlobRequestOptions), default(OperationContext), cancellationToken);
         }
+
+        public override Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
+            CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
+            return cloudBlockBlob.ExistsAsync(default(BlobRequestOptions), default(OperationContext), cancellationToken);
+        }
     }
 }
