@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -58,6 +59,18 @@ namespace Pericia.Storage.InMemory
         public override Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
         {
             return Task.FromResult(files.ContainsKey(fileId));
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+        {
+            var keys = files.Select(kvp => kvp.Key);
+            return Task.FromResult(keys);
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
+        {
+            var keys = files.Select(kvp => kvp.Key).Where(k=>k.StartsWith(subfolder));
+            return Task.FromResult(keys);
         }
     }
 }

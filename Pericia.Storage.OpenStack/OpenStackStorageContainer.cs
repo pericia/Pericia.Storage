@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -212,6 +213,16 @@ namespace Pericia.Storage.OpenStack
         }
 
         public override Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

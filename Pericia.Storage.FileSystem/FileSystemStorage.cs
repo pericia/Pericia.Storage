@@ -13,5 +13,13 @@ namespace Pericia.Storage.FileSystem
         public FileSystemStorage(FileSystemStorageOptions options) : base(options)
         {
         }
+
+        public virtual IFileStorageContainer GetDefaultContainer()
+        {
+            var containerService = new FileSystemStorageContainer();
+            containerService.Options = this.Options;
+            containerService.Container = "";
+            return containerService;
+        }
     }
 }

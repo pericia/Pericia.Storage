@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +12,11 @@ namespace Pericia.Storage.FileSystem
         {
             get
             {
+                if (string.IsNullOrEmpty(Container))
+                {
+                    return Options.Path;
+                }
+
                 return Path.Combine(Options.Path, Container);
             }
         }
@@ -93,6 +99,23 @@ namespace Pericia.Storage.FileSystem
             var filePath = Path.Combine(_folder, fileId);
 
             return Task.FromResult(File.Exists(filePath));
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+        {
+            var files = Directory.GetFiles(_folder);
+            return Task.FromResult<IEnumerable<string>>(files);
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(subfolder))
+            {
+                return ListFiles(cancellationToken);
+            }
+
+            var files = Directory.GetFiles(Path.Combine(_folder, subfolder));
+            return Task.FromResult<IEnumerable<string>>(files);
         }
     }
 }

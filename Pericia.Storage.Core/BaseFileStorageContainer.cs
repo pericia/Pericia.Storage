@@ -53,10 +53,22 @@ namespace Pericia.Storage
         }
         public abstract Task<string> SaveFile(Stream fileData, string fileId, CancellationToken cancellationToken);
 
-        public  Task<bool> FileExists(string fileId)
+        public Task<bool> FileExists(string fileId)
         {
             return FileExists(fileId, CancellationToken.None);
         }
         public abstract Task<bool> FileExists(string fileId, CancellationToken cancellationToken);
+
+        public Task<IEnumerable<string>> ListFiles()
+        {
+            return ListFiles(CancellationToken.None);
+        }
+
+        public Task<IEnumerable<string>> ListFiles(string subfolder)
+        {
+            return ListFiles(subfolder, CancellationToken.None);
+        }
+        public abstract Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken);
+        public abstract Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken);
     }
 }
