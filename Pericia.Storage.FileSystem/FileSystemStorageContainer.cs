@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -103,7 +104,7 @@ namespace Pericia.Storage.FileSystem
 
         public override Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
         {
-            var files = Directory.GetFiles(_folder);
+            var files = Directory.GetFiles(_folder).Select(Path.GetFileName);
             return Task.FromResult<IEnumerable<string>>(files);
         }
 
@@ -114,7 +115,7 @@ namespace Pericia.Storage.FileSystem
                 return ListFiles(cancellationToken);
             }
 
-            var files = Directory.GetFiles(Path.Combine(_folder, subfolder));
+            var files = Directory.GetFiles(Path.Combine(_folder, subfolder)).Select(Path.GetFileName);
             return Task.FromResult<IEnumerable<string>>(files);
         }
     }
