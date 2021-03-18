@@ -1,6 +1,7 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,6 +59,24 @@ namespace Pericia.Storage.Azure
         public override Task CreateContainer(CancellationToken cancellationToken)
         {
             return _cloudBlobContainer.Value.CreateIfNotExistsAsync(default(BlobContainerPublicAccessType), default(BlobRequestOptions), default(OperationContext), cancellationToken);
+        }
+
+        public override Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
+            CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
+            return cloudBlockBlob.ExistsAsync(default(BlobRequestOptions), default(OperationContext), cancellationToken);
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

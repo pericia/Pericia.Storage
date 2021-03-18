@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,5 +29,13 @@ namespace Pericia.Storage
         Task DeleteFile(string fileId);
 
         Task DeleteFile(string fileId, CancellationToken cancellationToken);
+
+        Task<bool> FileExists(string fileId);
+        Task<bool> FileExists(string fileId, CancellationToken cancellationToken);
+
+        Task<IEnumerable<string>> ListFiles();
+        Task<IEnumerable<string>> ListFiles(string subfolder);
+        Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken);
+        Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken);
     }
 }

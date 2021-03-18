@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,7 +46,7 @@ namespace Pericia.Storage.InMemory
         {
             _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
             _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
-         
+
             var stream = new MemoryStream();
             await fileData.CopyToAsync(stream, 81920, cancellationToken).ConfigureAwait(false);
             stream.Position = 0;
@@ -53,6 +54,23 @@ namespace Pericia.Storage.InMemory
             files[fileId] = stream;
 
             return fileId;
+        }
+
+        public override Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(files.ContainsKey(fileId));
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+        {
+            var keys = files.Select(kvp => kvp.Key);
+            return Task.FromResult(keys);
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
+        {
+            var keys = files.Select(kvp => kvp.Key).Where(k=>k.StartsWith(subfolder));
+            return Task.FromResult(keys);
         }
     }
 }
