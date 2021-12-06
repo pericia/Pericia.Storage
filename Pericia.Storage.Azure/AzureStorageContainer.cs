@@ -1,5 +1,6 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+﻿using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using System;
 using System.IO;
 using System.Threading;
@@ -9,7 +10,7 @@ namespace Pericia.Storage.Azure
 {
     public class AzureStorageContainer : BaseFileStorageContainer<AzureStorageOptions>
     {
-        private Lazy<CloudBlobContainer> _cloudBlobContainer;
+        private Lazy<BlobContainerClient> _cloudBlobContainer;
 
         public AzureStorageContainer()
             : this(default!, default!)
@@ -20,11 +21,9 @@ namespace Pericia.Storage.Azure
         {
             this.Options = options;
             this.Container = container;
-            _cloudBlobContainer = new Lazy<CloudBlobContainer>(() =>
+            _cloudBlobContainer = new Lazy<BlobContainerClient>(() =>
             {
-                var storageAccount = CloudStorageAccount.Parse(Options.ConnectionString);
-                CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
-                return cloudBlobClient.GetContainerReference(this.Container);
+                return new BlobContainerClient(Options.ConnectionString, this.Container);
             });
         }
 
@@ -34,30 +33,43 @@ namespace Pericia.Storage.Azure
             _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
             _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
 
-            CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
-            await cloudBlockBlob.UploadFromStreamAsync(fileData, default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken).ConfigureAwait(false);
+            var blob = _cloudBlobContainer.Value.GetBlobClient(fileId);
+            await blob.UploadAsync(fileData, cancellationToken);
             return fileId;
         }
 
-        public override Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
+        public override async Task<Stream?> GetFile(string fileId, CancellationToken cancellationToken)
         {
             _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
 
-            CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
-            return cloudBlockBlob.OpenReadAsync(default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken);
+            var blob = _cloudBlobContainer.Value.GetBlobClient(fileId);
+            try
+            {
+                return await blob.OpenReadAsync(cancellationToken: cancellationToken);
+            }
+            catch (RequestFailedException ex)
+            {
+                if (ex.Status == 404)
+                {
+                    return null;
+                }
+
+                throw;
+            }
+
         }
 
         public override Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
             _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
 
-            CloudBlockBlob cloudBlockBlob = _cloudBlobContainer.Value.GetBlockBlobReference(fileId);
-            return cloudBlockBlob.DeleteIfExistsAsync(default(DeleteSnapshotsOption), default(AccessCondition), default(BlobRequestOptions), default(OperationContext), cancellationToken);
+            var blob = _cloudBlobContainer.Value.GetBlobClient(fileId);
+            return blob.DeleteIfExistsAsync(cancellationToken: cancellationToken);
         }
 
         public override Task CreateContainer(CancellationToken cancellationToken)
         {
-            return _cloudBlobContainer.Value.CreateIfNotExistsAsync(default(BlobContainerPublicAccessType), default(BlobRequestOptions), default(OperationContext), cancellationToken);
+            return _cloudBlobContainer.Value.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
         }
     }
 }
