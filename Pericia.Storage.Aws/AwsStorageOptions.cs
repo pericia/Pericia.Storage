@@ -10,6 +10,9 @@ namespace Pericia.Storage.Aws
 
         public string SecretKey { get; set; } = string.Empty;
 
-        public string RegionEndpoint { get; set; } = string.Empty;
+        public string? RegionEndpoint { get; set; } 
+
+        public string? ServiceUrl { get; set; }
+
     }
 }

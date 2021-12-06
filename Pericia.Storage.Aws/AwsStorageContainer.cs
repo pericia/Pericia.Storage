@@ -28,14 +28,22 @@ namespace Pericia.Storage.Aws
             _s3Client = new Lazy<IAmazonS3>(() =>
             {
                 var credentials = new BasicAWSCredentials(Options.AccessKey, Options.SecretKey);
-                var regionField = typeof(RegionEndpoint).GetField(Options.RegionEndpoint);
-                if (regionField == null)
-                {
-                    throw new Exception("Incorrect AWS region");
-                }
-                var region = regionField.GetValue(null) as RegionEndpoint;
 
-                return new AmazonS3Client(credentials, region);
+                var config = new AmazonS3Config();
+
+                if (!string.IsNullOrEmpty(Options.RegionEndpoint))
+                {
+                    var regionField = typeof(RegionEndpoint).GetField(Options.RegionEndpoint);
+                    var region = regionField.GetValue(null) as RegionEndpoint;
+                    config.RegionEndpoint = region;
+                }
+
+                if (!string.IsNullOrEmpty(Options.ServiceUrl))
+                {
+                    config.ServiceURL = Options.ServiceUrl;
+                }
+
+                return new AmazonS3Client(credentials, config);
             });
         }
 
@@ -44,10 +52,8 @@ namespace Pericia.Storage.Aws
             _ = fileData ?? throw new ArgumentNullException(nameof(fileData));
             _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
 
-            using var memStream = new MemoryStream();
-            fileData.CopyTo(memStream);
             using var fileTransferUtility = new TransferUtility(_s3Client.Value);
-            await fileTransferUtility.UploadAsync(memStream, Container, fileId, cancellationToken).ConfigureAwait(false);
+            await fileTransferUtility.UploadAsync(fileData, Container, fileId, cancellationToken).ConfigureAwait(false);
 
             return fileId;
         }
@@ -66,8 +72,7 @@ namespace Pericia.Storage.Aws
 
                 var response = await _s3Client.Value.GetObjectAsync(request, cancellationToken).ConfigureAwait(false);
                 var memStream = new MemoryStream();
-                response.ResponseStream.CopyTo(memStream);
-                return memStream;
+                return response.ResponseStream;
             }
             catch (AmazonS3Exception ex)
             {
