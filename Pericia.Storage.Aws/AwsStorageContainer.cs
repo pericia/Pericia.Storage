@@ -5,7 +5,9 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Amazon.S3.Util;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,9 +35,7 @@ namespace Pericia.Storage.Aws
 
                 if (!string.IsNullOrEmpty(Options.RegionEndpoint))
                 {
-                    var regionField = typeof(RegionEndpoint).GetField(Options.RegionEndpoint);
-                    var region = regionField.GetValue(null) as RegionEndpoint;
-                    config.RegionEndpoint = region;
+                    config.RegionEndpoint = RegionEndpoint.GetBySystemName(Options.RegionEndpoint);
                 }
 
                 if (!string.IsNullOrEmpty(Options.ServiceUrl))
@@ -105,6 +105,61 @@ namespace Pericia.Storage.Aws
 
                 PutBucketResponse putBucketResponse = await _s3Client.Value.PutBucketAsync(putBucketRequest, cancellationToken).ConfigureAwait(false);
             }
+        }
+
+        public override async Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
+            try
+            {
+                GetObjectRequest request = new GetObjectRequest
+                {
+                    BucketName = Container,
+                    Key = fileId
+                };
+
+                _ = await _s3Client.Value.GetObjectAsync(request, cancellationToken).ConfigureAwait(false);
+                return true;
+            }
+            catch (AmazonS3Exception ex)
+            {
+                if (ex.ErrorCode == "NoSuchKey")
+                {
+                    // Le fichier n'existe pas
+                    return false;
+                }
+
+                throw;
+            }
+        }
+
+        public override async Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+        {
+            ListObjectsV2Request request = new ListObjectsV2Request
+            {
+                BucketName = Container
+            };
+
+            var response = await _s3Client.Value.ListObjectsV2Async(request, cancellationToken);
+            return response.S3Objects.Select(o => o.Key);
+        }
+
+        public override async Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(subfolder))
+            {
+                return await ListFiles(cancellationToken);
+            }
+
+            ListObjectsV2Request request = new ListObjectsV2Request
+            {
+                BucketName = Container,
+                Prefix = subfolder + "/"
+            };
+
+            var response = await _s3Client.Value.ListObjectsV2Async(request, cancellationToken);
+            return response.S3Objects.Select(o => o.Key);
         }
     }
 }

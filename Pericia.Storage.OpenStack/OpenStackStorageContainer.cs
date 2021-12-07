@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -85,6 +87,61 @@ namespace Pericia.Storage.OpenStack
             var request = await CreateRequest("DELETE", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken).ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested();
             await request.GetResponseAsync().ConfigureAwait(false);
+        }
+
+        public override async Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            var request = await CreateRequest("HEAD", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken).ConfigureAwait(false);
+
+            try
+            {
+                var response = await request.GetResponseAsync().ConfigureAwait(false);
+
+                return true;
+            }
+            catch (WebException ex)
+            {
+                var httpResponse = (HttpWebResponse)ex.Response;
+                if (httpResponse.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // 404 error means the file doesn't exist, we just return null
+                    return false;
+                }
+
+                throw;
+            }
+        }
+
+        public override async Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+        {
+            var request = await CreateRequest("GET", Options.ApiEndpoint + Container, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.NoContent || response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return Enumerable.Empty<string>();
+            }
+
+
+            using var reader = new StreamReader(response.GetResponseStream());
+            var result = new List<string>();
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (!string.IsNullOrEmpty(line))
+                {
+                    result.Add(line);
+                }
+            }
+
+            return result;
+        }
+
+        public override Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
 

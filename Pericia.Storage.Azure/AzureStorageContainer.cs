@@ -2,6 +2,7 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -70,6 +71,39 @@ namespace Pericia.Storage.Azure
         public override Task CreateContainer(CancellationToken cancellationToken)
         {
             return _cloudBlobContainer.Value.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
+        }
+
+        public override async Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            var blob = _cloudBlobContainer.Value.GetBlobClient(fileId);
+            var exists = await blob.ExistsAsync(cancellationToken);
+            return exists.Value;
+        }
+
+        public override async Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+        {
+            var result = new List<string>();
+
+            var asyncBlobs = _cloudBlobContainer.Value.GetBlobsAsync(cancellationToken: cancellationToken);
+            await foreach (var item in asyncBlobs)
+            {
+                result.Add(item.Name);
+            }
+
+            return result;
+        }
+
+        public override async Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
+        {
+            var result = new List<string>();
+
+            var asyncBlobs = _cloudBlobContainer.Value.GetBlobsAsync(prefix: subfolder + "/", cancellationToken: cancellationToken);
+            await foreach (var item in asyncBlobs)
+            {
+                result.Add(item.Name);
+            }
+
+            return result;
         }
     }
 }

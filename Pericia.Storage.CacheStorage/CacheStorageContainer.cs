@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -143,6 +144,40 @@ namespace Pericia.Storage.CacheStorage
 
             return DeleteFile(fileId, CancellationToken.None);
         }
+
+        public async Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
+        {
+            return await _cacheStorage.FileExists(fileId, cancellationToken)
+                   || await _referenceStorage.FileExists(fileId, cancellationToken);
+        }
+
+        public Task<bool> FileExists(string fileId)
+        {
+            _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
+
+            return FileExists(fileId, CancellationToken.None);
+        }
+
+        public Task<IEnumerable<string>> ListFiles()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<string>> ListFiles(string subfolder)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
 #pragma warning restore CA1031 // Do not catch general exception types
