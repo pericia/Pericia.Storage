@@ -1,11 +1,10 @@
-﻿using Pericia.Storage.Aws;
-using Pericia.Storage.Azure;
+﻿
 using Pericia.Storage.FileSystem;
 using Pericia.Storage.InMemory;
-using Pericia.Storage.OpenStack;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -33,52 +32,14 @@ namespace Pericia.Storage.Tests
             return TestStorage(fileStorage);
         }
 
-        [Fact]
-        public Task TestAzureBlobs()
+        protected async Task TestStorage(IFileStorageContainer fileStorage)
         {
-            var options = new AzureStorageOptions
-            {
-                ConnectionString = ""
-            };
-            var fileStorage = new AzureStorageContainer(options, "TestContainer");
-
-            return TestStorage(fileStorage);
-        }
-
-        [Fact]
-        public Task TestAwsS3()
-        {
-            var options = new AwsStorageOptions
-            {
-                AccessKey = "",
-                SecretKey = "",
-                ServiceUrl = ""
-            };
-            var fileStorage = new AwsStorageContainer(options, "TestContainer");
-
-            return TestStorage(fileStorage);
-        }
-
-        [Fact]
-        public Task TestOpenStack()
-        {
-            var options = new OpenStackStorageOptions
-            {
-                ApiEndpoint = "",
-                AuthEndpoint = "",
-                TenantName = "",
-                UserId = "",
-                Password = "",
-            };
-            var fileStorage = new OpenStackStorageContainer(options, "TestContainer");
-
-            return TestStorage(fileStorage);
-        }
-
-        private async Task TestStorage(IFileStorageContainer fileStorage)
-        {
+            var testFilename = Guid.NewGuid().ToString();
             var testLine = Guid.NewGuid().ToString();
             string fileId;
+
+            var currentFileCount = (await fileStorage.ListFiles()).Count();
+            Assert.False(await fileStorage.FileExists(testFilename));
 
             {
                 using var memoryStream = new MemoryStream();
@@ -88,9 +49,14 @@ namespace Pericia.Storage.Tests
                 writer.Flush();
 
                 memoryStream.Position = 0;
-                fileId = await fileStorage.SaveFile(memoryStream);
+                fileId = await fileStorage.SaveFile(memoryStream, testFilename);
                 Assert.NotNull(fileId);
+                Assert.Equal(testFilename, fileId);
             }
+
+            var newFileCount = (await fileStorage.ListFiles()).Count();
+            Assert.Equal(currentFileCount + 1, newFileCount);
+            Assert.True(await fileStorage.FileExists(testFilename));
 
             {
                 using var fileStream = await fileStorage.GetFile(fileId);
@@ -104,6 +70,7 @@ namespace Pericia.Storage.Tests
             await fileStorage.DeleteFile(fileId);
             var nullFileStream = await fileStorage.GetFile(fileId);
             Assert.Null(nullFileStream);
+            Assert.False(await fileStorage.FileExists(fileId));
         }
 
 
