@@ -16,11 +16,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Pericia.Storage.Aws\Pericia.Storage.Aws.csproj" />
-		<ProjectReference Include="..\Pericia.Storage.Azure\Pericia.Storage.Azure.csproj" />
+		<ProjectReference Include="..\Pericia.Storage.AzureBlobs\Pericia.Storage.AzureBlobs.csproj" />
 		<ProjectReference Include="..\Pericia.Storage.Core\Pericia.Storage.Core.csproj" />
 		<ProjectReference Include="..\Pericia.Storage.FileSystem\Pericia.Storage.FileSystem.csproj" />
 		<ProjectReference Include="..\Pericia.Storage.InMemory\Pericia.Storage.InMemory.csproj" />
 		<ProjectReference Include="..\Pericia.Storage.OpenStack\Pericia.Storage.OpenStack.csproj" />
+		<ProjectReference Include="..\Pericia.Storage.S3\Pericia.Storage.S3.csproj" />
 	</ItemGroup>
 </Project>

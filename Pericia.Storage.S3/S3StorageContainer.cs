@@ -12,18 +12,18 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pericia.Storage.Aws
+namespace Pericia.Storage.S3
 {
-    public class AwsStorageContainer : BaseFileStorageContainer<AwsStorageOptions>
+    public class S3StorageContainer : BaseFileStorageContainer<S3StorageOptions>
     {
         private Lazy<IAmazonS3> _s3Client;
 
-        public AwsStorageContainer()
+        public S3StorageContainer()
             : this(default!, default!)
         {
         }
 
-        public AwsStorageContainer(AwsStorageOptions options, string container)
+        public S3StorageContainer(S3StorageOptions options, string container)
         {
             this.Options = options;
             this.Container = container;

@@ -7,18 +7,18 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pericia.Storage.Azure
+namespace Pericia.Storage.AzureBlobs
 {
-    public class AzureStorageContainer : BaseFileStorageContainer<AzureStorageOptions>
+    public class AzureBlobsStorageContainer : BaseFileStorageContainer<AzureBlobsStorageOptions>
     {
         private Lazy<BlobContainerClient> _cloudBlobContainer;
 
-        public AzureStorageContainer()
+        public AzureBlobsStorageContainer()
             : this(default!, default!)
         {
         }
 
-        public AzureStorageContainer(AzureStorageOptions options, string container)
+        public AzureBlobsStorageContainer(AzureBlobsStorageOptions options, string container)
         {
             this.Options = options;
             this.Container = container;

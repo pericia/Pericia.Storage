@@ -25,9 +25,9 @@ The Pericia.Storage library provides an abstraction for cloud file storages. It 
 
 `IFileStorageContainer` contains the following methods :
 
-- `Task<string> SaveFile(Stream fileData)` : save a file to the storage service, and returns the unique id of the file. 
-
 - `Task<string> SaveFile(Stream fileData, string fileId)` : Save a file to the storage service, using its unique identifier. If a file with the same id exists, it is overwritten.
+
+- `Task<string> SaveFile(Stream fileData)` : save a file to the storage service, and returns the generated unique id of the file. 
 
 - `Task<Stream> GetFile(string fileId)` : get the file content from the service
 
@@ -63,7 +63,7 @@ First, use AddStorage to register the storage service, then add your provider, w
 
 If you want to be able to switch provider in your configuration, you can set the provider name in the `Provider` property of the options. Then you can add several providers, only the one in configuration will be registered :
 
-	services.AddStorage().AddFileSystem(storageConfig).AddAzure(storageConfig).AddOpenStack(storageConfig);
+	services.AddStorage().AddFileSystem(storageConfig).AddAzureBlobs(storageConfig).AddOpenStack(storageConfig);
 
 If you only want to use one container in your app, you can register it directly :
 
@@ -104,7 +104,7 @@ The only option needed is the `ConnectionString`
 
 [![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.Aws.svg)](https://www.nuget.org/packages/Pericia.Storage.Aws/)
 
-Saves the files to AWS S3.
+Saves the files to AWS S3 or any S3 compatible provider.
 
 The options needed are the `AccessKey`, `SecretKey`, and either the `RegionEndpoint` (for AWS) or `ServiceUrl` (for S3-compatible providers)
 

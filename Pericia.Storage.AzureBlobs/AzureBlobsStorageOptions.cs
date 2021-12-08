@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pericia.Storage.Azure
+namespace Pericia.Storage.AzureBlobs
 {
-    public class AzureStorageOptions : FileStorageOptions
+    public class AzureBlobsStorageOptions : FileStorageOptions
     {
         public string ConnectionString { get; set; } = string.Empty;
     }

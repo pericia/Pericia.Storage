@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pericia.Storage.Aws
+namespace Pericia.Storage.S3
 {
-    public class AwsStorageOptions : FileStorageOptions
+    public class S3StorageOptions : FileStorageOptions
     {
         public string AccessKey { get; set; } = string.Empty;
 
