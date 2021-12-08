@@ -106,7 +106,7 @@ The only option needed is the `ConnectionString`
 
 Saves the files to AWS S3.
 
-The options needed are the `AccessKey`, `SecretKey` and the `RegionEndpoint`
+The options needed are the `AccessKey`, `SecretKey`, and either the `RegionEndpoint` (for AWS) or `ServiceUrl` (for S3-compatible providers)
 
 ### In-memory
 
