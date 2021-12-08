@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace Pericia.Storage.OpenStack
 {
     public class OpenStackStorageContainer : BaseFileStorageContainer<OpenStackStorageOptions>
     {
+        private static readonly HttpClient client = new HttpClient();
 
         public OpenStackStorageContainer()
         {
@@ -30,24 +32,11 @@ namespace Pericia.Storage.OpenStack
             _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
 
             var url = Options.ApiEndpoint + Container + "/" + fileId;
-            var request = await CreateRequest("PUT", url, cancellationToken).ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
+            var request = await CreateRequest(HttpMethod.Put, url, cancellationToken);
+            request.Content = new StreamContent(fileData);
+            var response = await client.SendAsync(request, cancellationToken);
 
-            if (request == null)
-            {
-                throw new Exception("OpenStackStorage.SaveFile : Error on request - url : " + url + " - request is null");
-            }
-
-            using Stream dataStream = await request.GetRequestStreamAsync().ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
-            using var fileStream = new MemoryStream();
-
-            fileData.CopyTo(fileStream);
-            await dataStream.WriteAsync(fileStream.ToArray(), 0, (int)fileStream.Length, cancellationToken).ConfigureAwait(false);
-            dataStream.Close();
-
-            await request.GetResponseAsync().ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
+            response.EnsureSuccessStatusCode();
 
             return fileId;
 
@@ -57,76 +46,49 @@ namespace Pericia.Storage.OpenStack
         {
             _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
 
-            var request = await CreateRequest("GET", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken).ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
+            var request = await CreateRequest(HttpMethod.Get, Options.ApiEndpoint + Container + "/" + fileId, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
 
-            try
+            if (response.StatusCode == HttpStatusCode.NotFound)
             {
-                var response = await request.GetResponseAsync().ConfigureAwait(false);
-                cancellationToken.ThrowIfCancellationRequested();
-
-                return response.GetResponseStream();
+                return null;
             }
-            catch (WebException ex)
-            {
-                var httpResponse = (HttpWebResponse)ex.Response;
-                if (httpResponse.StatusCode == HttpStatusCode.NotFound)
-                {
-                    // 404 error means the file doesn't exist, we just return null
-                    return null;
-                }
 
-                throw;
-            }
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadAsStreamAsync();
         }
 
         public override async Task DeleteFile(string fileId, CancellationToken cancellationToken)
         {
             _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
 
-            var request = await CreateRequest("DELETE", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken).ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
-            await request.GetResponseAsync().ConfigureAwait(false);
+            var request = await CreateRequest(HttpMethod.Delete, Options.ApiEndpoint + Container + "/" + fileId, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
+
+            response.EnsureSuccessStatusCode();
         }
 
         public override async Task<bool> FileExists(string fileId, CancellationToken cancellationToken)
         {
-            var request = await CreateRequest("HEAD", Options.ApiEndpoint + Container + "/" + fileId, cancellationToken).ConfigureAwait(false);
+            var request = await CreateRequest(HttpMethod.Head, Options.ApiEndpoint + Container + "/" + fileId, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
 
-            try
-            {
-                var response = await request.GetResponseAsync().ConfigureAwait(false);
-
-                return true;
-            }
-            catch (WebException ex)
-            {
-                var httpResponse = (HttpWebResponse)ex.Response;
-                if (httpResponse.StatusCode == HttpStatusCode.NotFound)
-                {
-                    // 404 error means the file doesn't exist, we just return null
-                    return false;
-                }
-
-                throw;
-            }
+            return response.StatusCode == HttpStatusCode.OK;
         }
 
         public override async Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
         {
-            var request = await CreateRequest("GET", Options.ApiEndpoint + Container, cancellationToken).ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
+            var request = await CreateRequest(HttpMethod.Get, Options.ApiEndpoint + Container, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
 
             if (response.StatusCode == HttpStatusCode.NoContent || response.StatusCode == HttpStatusCode.NotFound)
             {
                 return Enumerable.Empty<string>();
             }
 
-
-            using var reader = new StreamReader(response.GetResponseStream());
             var result = new List<string>();
+            using var reader = new StreamReader(await response.Content.ReadAsStreamAsync());
             string line;
             while ((line = reader.ReadLine()) != null)
             {
@@ -147,13 +109,25 @@ namespace Pericia.Storage.OpenStack
 
         public override async Task CreateContainer(CancellationToken cancellationToken)
         {
-            var request = await CreateRequest("PUT", Options.ApiEndpoint + Container, cancellationToken).ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
-            await request.GetResponseAsync().ConfigureAwait(false);
+            var request = await CreateRequest(HttpMethod.Put, Options.ApiEndpoint + Container, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
+            response.EnsureSuccessStatusCode();
         }
 
 
         #region Request helpers
+
+        private async Task<HttpRequestMessage> CreateRequest(HttpMethod method, string url, CancellationToken cancellationToken)
+        {
+            var token = await GetToken(cancellationToken).ConfigureAwait(false);
+
+            var request = new HttpRequestMessage(method, url);
+            request.Headers.Add("X-Auth-Token", token);
+
+            return request;
+        }
+
+        [Obsolete]
         private async Task<WebRequest> CreateRequest(string method, string url, CancellationToken cancellationToken, bool useToken = true)
         {
             var request = WebRequest.Create(new Uri(url));
@@ -168,20 +142,6 @@ namespace Pericia.Storage.OpenStack
             return request;
         }
 
-        private async Task<WebRequest> CreatePostJsonRequest(string url, string data, CancellationToken cancellationToken, bool useToken = true)
-        {
-            var request = await CreateRequest("POST", url, cancellationToken, useToken).ConfigureAwait(false);
-
-            byte[] byteArray = Encoding.UTF8.GetBytes(data);
-            request.ContentLength = byteArray.Length;
-            request.ContentType = "application/json";
-
-            Stream dataStream = await request.GetRequestStreamAsync().ConfigureAwait(false);
-            await dataStream.WriteAsync(byteArray, 0, byteArray.Length).ConfigureAwait(false);
-            dataStream.Close();
-
-            return request;
-        }
         #endregion
 
         #region Token
@@ -214,56 +174,45 @@ namespace Pericia.Storage.OpenStack
         private async Task<string> GetTokenV3(CancellationToken cancellationToken)
         {
             var auth = "{ \"auth\": { \"identity\": { \"methods\": [\"password\"], \"password\": { \"user\": { \"name\": \"" + Options.UserId + "\", \"domain\": { \"id\": \"default\" }, \"password\": \"" + Options.Password + "\" } } }, \"scope\": { \"project\": { \"name\": \"" + Options.TenantName + "\", \"domain\": { \"id\": \"default\" } } } } }";
-            var request = await CreatePostJsonRequest(Options.AuthEndpoint + "/auth/tokens", auth, cancellationToken, false).ConfigureAwait(false);
+            var content = new StringContent(auth, Encoding.UTF8, "application/json");
 
-            var response = await request.GetResponseAsync().ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
+            var response = await client.PostAsync(Options.AuthEndpoint + "/auth/tokens", content, cancellationToken);
 
-            using (var reader = new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
+            var jsonResponse = await response.Content.ReadAsStreamAsync();
+            var objectResponse = JsonSerializer.Deserialize<OpenStackResponseV3>(jsonResponse);
+
+            var tokenId = response.Headers.GetValues("X-Subject-Token").FirstOrDefault();
+            var expires = objectResponse?.Token?.Expires;
+
+            if (tokenId != null && expires != null)
             {
-                string jsonResponse = await reader.ReadToEndAsync().ConfigureAwait(false);
-                cancellationToken.ThrowIfCancellationRequested();
-                var objectResponse = JsonConvert.DeserializeObject<OpenStackResponseV3>(jsonResponse);
+                TokenId = tokenId;
+                TokenExpires = expires.Value;
 
-                var tokenId = response.Headers["X-Subject-Token"];
-                var expires = objectResponse?.Token?.Expires;
-
-                if (tokenId != null && expires != null)
-                {
-                    TokenId = tokenId;
-                    TokenExpires = expires.Value;
-
-                    return TokenId;
-                }
+                return TokenId;
             }
 
-            throw new NotImplementedException();
+            return string.Empty;
         }
 
         private async Task<string> GetTokenV2(CancellationToken cancellationToken)
         {
             var auth = "{\"auth\": {\"tenantName\": \"" + Options.TenantName + "\", \"passwordCredentials\": {\"username\": \"" + Options.UserId + "\", \"password\": \"" + Options.Password + "\"}}}";
-            var request = await CreatePostJsonRequest(Options.AuthEndpoint + "tokens", auth, cancellationToken, false).ConfigureAwait(false);
+            var content = new StringContent(auth, Encoding.UTF8, "application/json");
 
-            var response = await request.GetResponseAsync().ConfigureAwait(false);
-            cancellationToken.ThrowIfCancellationRequested();
+            var response = await client.PostAsync(Options.AuthEndpoint + "tokens", content, cancellationToken);
+            var jsonResponse = await response.Content.ReadAsStreamAsync();
 
-            using (var reader = new StreamReader(response.GetResponseStream() ?? throw new InvalidOperationException()))
+            var objectResponse = JsonSerializer.Deserialize<OpenStackResponseV2>(jsonResponse);
+            var token = objectResponse?.Access?.Token;
+
+            if (token != null)
             {
-                string jsonResponse = await reader.ReadToEndAsync().ConfigureAwait(false);
-                cancellationToken.ThrowIfCancellationRequested();
-                var objectResponse = JsonConvert.DeserializeObject<OpenStackResponseV2>(jsonResponse);
-                var token = objectResponse?.Access?.Token;
+                TokenId = token.Id;
+                TokenExpires = token.Expires;
 
-                if (token != null)
-                {
-                    TokenId = token.Id;
-                    TokenExpires = token.Expires;
-
-                    return TokenId;
-                }
+                return TokenId;
             }
-
 
             return string.Empty;
         }
