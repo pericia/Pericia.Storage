@@ -52,7 +52,9 @@ namespace Pericia.Storage.Tests
                 Assert.NotNull(fileId);
             }
 
-            var newFileCount = (await fileStorage.ListFiles()).Count();
+            var fileListing = await fileStorage.ListFiles();
+            Assert.Contains(fileId, fileListing);
+            var newFileCount = fileListing.Count();
             Assert.Equal(currentFileCount + 1, newFileCount);
             Assert.True(await fileStorage.FileExists(fileId));
 
@@ -85,6 +87,25 @@ namespace Pericia.Storage.Tests
                 var nullFileStream = await fileStorage.GetFile(fileId);
                 Assert.Null(nullFileStream);
                 Assert.False(await fileStorage.FileExists(fileId));
+            }
+
+            // Test file in folder
+            {
+                using var memoryStream = new MemoryStream();
+                using var writer = new StreamWriter(memoryStream);
+
+                writer.WriteLine(testLine);
+                writer.Flush();
+
+                memoryStream.Position = 0;
+                await fileStorage.SaveFile(memoryStream, "Folder1/File1.txt");
+            }
+
+            // Check if the file is in the subfolder
+            {
+                var folderFiles = await fileStorage.ListFiles("Folder1");
+                Assert.Contains("Folder1/File1.txt", folderFiles);
+                Assert.DoesNotContain(fileId, folderFiles);
             }
         }
 

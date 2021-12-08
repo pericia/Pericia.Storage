@@ -77,9 +77,19 @@ namespace Pericia.Storage.OpenStack
             return response.StatusCode == HttpStatusCode.OK;
         }
 
-        public override async Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+        public override Task<IEnumerable<string>> ListFiles(CancellationToken cancellationToken)
+            => ListFiles(null!, cancellationToken);
+
+        public override async Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
         {
-            var request = await CreateRequest(HttpMethod.Get, Options.ApiEndpoint + Container, cancellationToken);
+            var url = Options.ApiEndpoint + Container;
+
+            if (!string.IsNullOrEmpty(subfolder))
+            {
+                url += "?prefix=" + subfolder + "/";
+            }
+
+            var request = await CreateRequest(HttpMethod.Get, url, cancellationToken);
             var response = await client.SendAsync(request, cancellationToken);
 
             if (response.StatusCode == HttpStatusCode.NoContent || response.StatusCode == HttpStatusCode.NotFound)
@@ -99,11 +109,6 @@ namespace Pericia.Storage.OpenStack
             }
 
             return result;
-        }
-
-        public override Task<IEnumerable<string>> ListFiles(string subfolder, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
         }
 
 

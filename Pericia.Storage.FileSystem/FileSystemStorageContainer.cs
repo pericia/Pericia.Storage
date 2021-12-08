@@ -120,7 +120,7 @@ namespace Pericia.Storage.FileSystem
                 return ListFiles(cancellationToken);
             }
 
-            var files = Directory.GetFiles(Path.Combine(_folder, subfolder)).Select(Path.GetFileName);
+            var files = Directory.GetFiles(Path.Combine(_folder, subfolder)).Select(f => subfolder + "/" + Path.GetFileName(f));
             return Task.FromResult<IEnumerable<string>>(files);
         }
     }
