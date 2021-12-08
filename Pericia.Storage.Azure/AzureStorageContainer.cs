@@ -35,7 +35,7 @@ namespace Pericia.Storage.Azure
             _ = fileId ?? throw new ArgumentNullException(nameof(fileId));
 
             var blob = _cloudBlobContainer.Value.GetBlobClient(fileId);
-            await blob.UploadAsync(fileData, cancellationToken);
+            await blob.UploadAsync(fileData, overwrite: true, cancellationToken);
             return fileId;
         }
 
