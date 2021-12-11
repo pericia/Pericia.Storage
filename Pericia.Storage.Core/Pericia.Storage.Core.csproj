@@ -10,7 +10,6 @@
 		<Authors>Guillaume Lacasa</Authors>
 		<Company>Pericia</Company>
 		<Description>Core dll for Pericia.Storage</Description>
-		<PackageLicenseUrl>https://github.com/pericia/Pericia.Storage/blob/master/LICENSE.txt</PackageLicenseUrl>
 		<PackageProjectUrl>https://github.com/pericia/Pericia.Storage</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/pericia/Pericia.Storage.git</RepositoryUrl>
 		<AssemblyOriginatorKeyFile>../pericia.storage.snk</AssemblyOriginatorKeyFile>
@@ -18,7 +17,16 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />

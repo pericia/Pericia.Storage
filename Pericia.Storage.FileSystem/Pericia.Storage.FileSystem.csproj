@@ -9,7 +9,6 @@
 		<Authors>Guillaume Lacasa</Authors>
 		<Company>Pericia</Company>
 		<Description>Pericia.Storage provider for local file system</Description>
-		<PackageLicenseUrl>https://github.com/pericia/Pericia.Storage/blob/master/LICENSE.txt</PackageLicenseUrl>
 		<PackageProjectUrl>https://github.com/pericia/Pericia.Storage</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/pericia/Pericia.Storage.git</RepositoryUrl>
 		<AssemblyOriginatorKeyFile>../pericia.storage.snk</AssemblyOriginatorKeyFile>
@@ -17,7 +16,16 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Pericia.Storage.Core\Pericia.Storage.Core.csproj" />
