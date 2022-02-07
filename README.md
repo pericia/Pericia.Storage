@@ -94,7 +94,7 @@ Saves to OpenStack. The following options are needed :
 
 ### Azure blobs
 
-[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.Azure.svg)](https://www.nuget.org/packages/Pericia.Storage.Azure/)
+[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.AzureBlobs.svg)](https://www.nuget.org/packages/Pericia.Storage.AzureBlobs/)
 
 Saves the files to Azure Blob storage.
 
@@ -102,7 +102,7 @@ The only option needed is the `ConnectionString`
 
 ### AWS S3
 
-[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.Aws.svg)](https://www.nuget.org/packages/Pericia.Storage.Aws/)
+[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.S3.svg)](https://www.nuget.org/packages/Pericia.Storage.S3/)
 
 Saves the files to AWS S3 or any S3 compatible provider.
 
