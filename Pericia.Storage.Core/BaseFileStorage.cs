@@ -26,12 +26,26 @@ namespace Pericia.Storage
             }
         }
 
-
-        public virtual IFileStorageContainer GetContainer(string container)
+        public virtual IFileStorageContainer GetContainer()
         {
+            return GetContainer(null);
+        }
+
+        public virtual IFileStorageContainer GetContainer(string? container)
+        {
+            if (string.IsNullOrWhiteSpace(container))
+            {
+                container = Options.Container;
+            }
+
+            if (string.IsNullOrWhiteSpace(container))
+            {
+                throw new ArgumentException("Container name not provided", nameof(container));
+            }
+
             var containerService = new TContainer();
             containerService.Options = this.Options;
-            containerService.Container = container;
+            containerService.Container = container!;
             return containerService;
         }
     }

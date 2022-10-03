@@ -8,6 +8,6 @@ namespace Pericia.Storage
     {
         FileStorageOptions Options { get; set; }
 
-        IFileStorageContainer GetContainer(string container);
+        IFileStorageContainer GetContainer(string? container);
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Pericia.Storage
 {
-    public class DataProtectionOptions: FileStorageOptions
+    internal class DataProtectionStorageOptions
     {
         public string? DataProtectionContainer { get; set; }
         public string? SubDirectory { get; set; }

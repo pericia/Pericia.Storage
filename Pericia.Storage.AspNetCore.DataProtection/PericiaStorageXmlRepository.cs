@@ -9,34 +9,19 @@ using System.Xml.Linq;
 
 namespace Pericia.Storage.AspNetCore.DataProtection
 {
-    public class PericiaStorageXmlRepository : IXmlRepository
+    internal class PericiaStorageXmlRepository : IXmlRepository
     {
-        private readonly IFileStorage fileStorage;
-        private readonly DataProtectionOptions storageOptions;
+        private readonly DataProtectionStorageOptions storageOptions;
         private readonly ILogger logger;
 
         private readonly IFileStorageContainer container;
 
-        public PericiaStorageXmlRepository(IFileStorage fileStorage, DataProtectionOptions storageOptions, ILogger<PericiaStorageXmlRepository> logger)
+        public PericiaStorageXmlRepository(IFileStorage fileStorage, DataProtectionStorageOptions storageOptions, ILogger<PericiaStorageXmlRepository> logger)
         {
-            this.fileStorage = fileStorage;
             this.storageOptions = storageOptions;
             this.logger = logger;
 
-            this.container = GetContainer();
-        }
-
-        private IFileStorageContainer GetContainer()
-        {
-            var containerName = storageOptions.DataProtectionContainer ?? storageOptions.Container;
-
-            if (string.IsNullOrEmpty(containerName))
-            {
-                logger.LogError("No container has been registered for Data Protection storage");
-                throw new Exception("No container has been registered for Data Protection storage");
-            }
-
-            return fileStorage.GetContainer(containerName);
+            this.container = fileStorage.GetContainer(storageOptions.DataProtectionContainer);
         }
 
         public IReadOnlyCollection<XElement> GetAllElements()
