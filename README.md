@@ -122,7 +122,7 @@ Provider key : `Azure`
 
 ### AWS S3
 
-[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.S3.svg)](https://www.nuget.org/packages/Pericia.Storage.S3/)
+[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.AwsS3.svg)](https://www.nuget.org/packages/Pericia.Storage.AwsS3/)
 
 Saves the files to AWS S3 
 
@@ -137,3 +137,21 @@ Provider key : `AwsS3`
 [![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.InMemory.svg)](https://www.nuget.org/packages/Pericia.Storage.InMemory/)
 
 Store data in-memory - for testing purpose.
+
+
+## Persist Data Protection keys
+
+[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.AspNetCore.DataProtection.svg)](https://www.nuget.org/packages/Pericia.Storage.AspNetCore.DataProtection/)
+
+When Pericia.Storage is configured for your app, you can use it to save the data protection keys, with the package `Pericia.Storage.AspNetCore.DataProtection`.
+
+	services.AddDataProtection()
+		.PersistKeysToPericiaStorage()
+		.ProtectKeysWithCertificate(cert);
+
+You can use the default container, or you can choose to store the keys in a different container or in a sub-folder
+
+    services.AddDataProtection()
+        .PersistKeysToPericiaStorage(container: "keyscontainer", subDirectory: "keysdirectory")
+        .ProtectKeysWithCertificate(cert);
+		
