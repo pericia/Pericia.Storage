@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+	  <LangVersion>8.0</LangVersion>
+	  <Nullable>enable</Nullable>
+	  <RootNamespace>Pericia.Storage</RootNamespace>
+	  <SignAssembly>true</SignAssembly>
+	  <DelaySign>false</DelaySign>
+	  <Company>Pericia</Company>
+	  <Description>Use Pericia.Storage to store Data Protection keys</Description>
+	  <PackageProjectUrl>https://github.com/pericia/Pericia.Storage</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/pericia/Pericia.Storage.git</RepositoryUrl>
+	  <AssemblyOriginatorKeyFile>../pericia.storage.snk</AssemblyOriginatorKeyFile>
+	  <PublishRepositoryUrl>true</PublishRepositoryUrl>
+	  <EmbedUntrackedSources>true</EmbedUntrackedSources>
+	  <IncludeSymbols>true</IncludeSymbols>
+	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageIcon>pericia.png</PackageIcon>
+
+  </PropertyGroup>
+
+
+	<ItemGroup>
+		<None Include="..\pericia.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="6.0.9" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Pericia.Storage.Core\Pericia.Storage.Core.csproj" />
+	</ItemGroup>
+	
+</Project>
