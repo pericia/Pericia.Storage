@@ -56,10 +56,14 @@ namespace Pericia.Storage.AspNetCore.DataProtection
 
         public Task StoreElementCore(XElement element, string friendlyName)
         {
+            var fileName = string.IsNullOrEmpty(storageOptions.SubDirectory) ?
+                friendlyName :
+                storageOptions.SubDirectory + "/" + friendlyName;
+
             using var memStream = new MemoryStream();
             element.Save(memStream);
             memStream.Position = 0;
-            return container.SaveFile(memStream, friendlyName);
+            return container.SaveFile(memStream, fileName);
         }
     }
 }
