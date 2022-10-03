@@ -99,7 +99,7 @@ namespace Pericia.Storage.OpenStack
 
             var result = new List<string>();
             using var reader = new StreamReader(await response.Content.ReadAsStreamAsync());
-            string line;
+            string? line;
             while ((line = reader.ReadLine()) != null)
             {
                 if (!string.IsNullOrEmpty(line))
@@ -128,21 +128,6 @@ namespace Pericia.Storage.OpenStack
 
             var request = new HttpRequestMessage(method, url);
             request.Headers.Add("X-Auth-Token", token);
-
-            return request;
-        }
-
-        [Obsolete]
-        private async Task<WebRequest> CreateRequest(string method, string url, CancellationToken cancellationToken, bool useToken = true)
-        {
-            var request = WebRequest.Create(new Uri(url));
-            request.Method = method;
-
-            if (useToken)
-            {
-                var token = await GetToken(cancellationToken).ConfigureAwait(false);
-                request.Headers.Add("X-Auth-Token", token);
-            }
 
             return request;
         }
