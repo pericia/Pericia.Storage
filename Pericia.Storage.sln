@@ -22,9 +22,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.InMemory", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.AzureBlobs", "Pericia.Storage.AzureBlobs\Pericia.Storage.AzureBlobs.csproj", "{C790DFF7-DD25-473E-9A04-56FE33F887DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.S3", "Pericia.Storage.S3\Pericia.Storage.S3.csproj", "{144FDBC1-3D7B-49C7-A61B-210B145FD0DC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.Storage.AspNetCore.DataProtection", "Pericia.Storage.AspNetCore.DataProtection\Pericia.Storage.AspNetCore.DataProtection.csproj", "{06819D09-80BA-45E1-BA96-1E83F8DB768D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.AwsS3", "Pericia.Storage.AwsS3\Pericia.Storage.AwsS3.csproj", "{48DEDD8D-6F78-4797-8E81-A6FF94F5762E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,14 +56,14 @@ Global
 		{C790DFF7-DD25-473E-9A04-56FE33F887DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C790DFF7-DD25-473E-9A04-56FE33F887DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C790DFF7-DD25-473E-9A04-56FE33F887DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{144FDBC1-3D7B-49C7-A61B-210B145FD0DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{144FDBC1-3D7B-49C7-A61B-210B145FD0DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{144FDBC1-3D7B-49C7-A61B-210B145FD0DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{144FDBC1-3D7B-49C7-A61B-210B145FD0DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{06819D09-80BA-45E1-BA96-1E83F8DB768D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{06819D09-80BA-45E1-BA96-1E83F8DB768D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06819D09-80BA-45E1-BA96-1E83F8DB768D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06819D09-80BA-45E1-BA96-1E83F8DB768D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48DEDD8D-6F78-4797-8E81-A6FF94F5762E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48DEDD8D-6F78-4797-8E81-A6FF94F5762E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48DEDD8D-6F78-4797-8E81-A6FF94F5762E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48DEDD8D-6F78-4797-8E81-A6FF94F5762E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Pericia.Storage.S3
+namespace Pericia.Storage.AwsS3
 {
     public class S3StorageOptions : FileStorageOptions
     {

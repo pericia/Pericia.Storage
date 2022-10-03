@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pericia.Storage.S3
+namespace Pericia.Storage.AwsS3
 {
     public class S3StorageContainer : BaseFileStorageContainer<S3StorageOptions>
     {

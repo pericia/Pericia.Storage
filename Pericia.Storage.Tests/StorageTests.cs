@@ -63,7 +63,7 @@ namespace Pericia.Storage.Tests
                 using var fileStream = await fileStorage.GetFile(fileId);
                 Assert.NotNull(fileStream);
 
-                using var reader = new StreamReader(fileStream ?? default!);
+                using var reader = new StreamReader(fileStream!);
                 var line = reader.ReadLine();
                 Assert.Equal(testLine, line);
             }
