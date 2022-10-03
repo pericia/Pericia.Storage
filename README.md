@@ -61,7 +61,7 @@ First, use AddStorage to register the storage service, then add your provider, w
 		services.AddStorage().AddFileSystem(storageConfig);
 	}
 
-If you want to be able to switch provider in your configuration, you can set the provider name in the `Provider` property of the options. Then you can add several providers, only the one in configuration will be registered :
+If you want to be able to switch provider in your configuration, you can set the provider key in the `Provider` property of the options. Then you can add several providers, only the one in configuration will be registered :
 
 	services.AddStorage().AddFileSystem(storageConfig).AddAzureBlobs(storageConfig).AddOpenStack(storageConfig);
 
@@ -79,6 +79,22 @@ This provider saves the files on the hard drive.
 
 The only option needed is `Path`, the directory path.
 
+Provider key : `FileSystem`
+
+### MinIO
+
+[![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.Minio.svg)](https://www.nuget.org/packages/Pericia.Storage.Minio/)
+
+Saves the files to MinIO or any S3-compatible service
+
+The options needed are the `AccessKey`, `SecretKey`, and `Endpoint` (the url host, without the 'https://' part).
+
+If your service endpoint is not accessible with https, you can add the option `Insecure` = true.
+
+Some S3 services may throw an error "The authorization header is malformed; the region 'us-east-1' is wrong; expecting 'xxx'". You can add the expected region to the options with key `Region`.
+
+Provider key : `MinIO`
+
 ### OpenStack
 
 [![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.OpenStack.svg)](https://www.nuget.org/packages/Pericia.Storage.OpenStack/)
@@ -92,6 +108,8 @@ Saves to OpenStack. The following options are needed :
 - `Password`
 - `AuthApiVersion` : set this value to `2` if you want to use the v2 authentication API. If not set, the V3 API will be used.
 
+Provider key : `OpenStack`
+
 ### Azure blobs
 
 [![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.AzureBlobs.svg)](https://www.nuget.org/packages/Pericia.Storage.AzureBlobs/)
@@ -100,13 +118,19 @@ Saves the files to Azure Blob storage.
 
 The only option needed is the `ConnectionString`
 
+Provider key : `Azure`
+
 ### AWS S3
 
 [![NuGet](https://img.shields.io/nuget/v/Pericia.Storage.S3.svg)](https://www.nuget.org/packages/Pericia.Storage.S3/)
 
-Saves the files to AWS S3 or any S3 compatible provider.
+Saves the files to AWS S3 
 
 The options needed are the `AccessKey`, `SecretKey`, and either the `RegionEndpoint` (for AWS) or `ServiceUrl` (for S3-compatible providers)
+
+If you use a S3-Compatible service, you should use the Minio provider instead
+
+Provider key : `AwsS3`
 
 ### In-memory
 

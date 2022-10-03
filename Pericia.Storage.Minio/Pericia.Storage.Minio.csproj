@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<SignAssembly>true</SignAssembly>
+		<DelaySign>false</DelaySign>
+		<Authors>Guillaume Lacasa</Authors>
+		<Company>Pericia</Company>
+		<Description>Pericia.Storage provider for MinIO and S3-compatible services</Description>
+		<PackageProjectUrl>https://github.com/pericia/Pericia.Storage</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/pericia/Pericia.Storage.git</RepositoryUrl>
+		<AssemblyOriginatorKeyFile>../pericia.storage.snk</AssemblyOriginatorKeyFile>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>pericia.png</PackageIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Pericia.Storage.Core\Pericia.Storage.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <!--<PackageReference Include="Minio" Version="4.0.5" />-->
+	  <PackageReference Include="Minio" Version="4.0.5" />
+	  <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\pericia.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>

@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.Storage.AspNetCore.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pericia.Storage.AwsS3", "Pericia.Storage.AwsS3\Pericia.Storage.AwsS3.csproj", "{48DEDD8D-6F78-4797-8E81-A6FF94F5762E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pericia.Storage.Minio", "Pericia.Storage.Minio\Pericia.Storage.Minio.csproj", "{B90CD35F-49E0-4055-A119-648BA7501319}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{48DEDD8D-6F78-4797-8E81-A6FF94F5762E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48DEDD8D-6F78-4797-8E81-A6FF94F5762E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48DEDD8D-6F78-4797-8E81-A6FF94F5762E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B90CD35F-49E0-4055-A119-648BA7501319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B90CD35F-49E0-4055-A119-648BA7501319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B90CD35F-49E0-4055-A119-648BA7501319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B90CD35F-49E0-4055-A119-648BA7501319}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
