@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
-		<LangVersion>8.0</LangVersion>
+		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 		<SignAssembly>true</SignAssembly>
 		<DelaySign>false</DelaySign>
@@ -27,7 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.Text.Json" Version="7.0.0-rc.2.22472.3" />
+		<PackageReference Include="System.Text.Json" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -27,7 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Minio" Version="4.0.5" />
+	  <PackageReference Include="Minio" Version="4.0.6" />
 	  <PackageReference Include="System.Linq.Async" Version="6.0.1" />
 	</ItemGroup>
 
