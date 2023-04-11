@@ -7,6 +7,7 @@ Storage abstraction to store file in local file system or cloud storage.
 Providers available for :
 
 - File system
+- MinIO
 - OpenStack
 - Azure Blobs
 - AWS S3
