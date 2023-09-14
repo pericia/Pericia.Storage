@@ -6,6 +6,11 @@ namespace Pericia.Storage.AzureBlobs
 {
     public class AzureBlobsStorageOptions : FileStorageOptions
     {
-        public string ConnectionString { get; set; } = string.Empty;
+        public string? ConnectionString { get; set; }
+
+        public string? AccountName { get; set; }
+
+        public string? ManagedIdentityClientId { get; set; }
+
     }
 }

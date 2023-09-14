@@ -1,9 +1,12 @@
 ﻿using Azure;
+using Azure.Core;
+using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,13 +21,44 @@ namespace Pericia.Storage.AzureBlobs
         {
         }
 
+        private BlobServiceClient GetBlobServiceClient()
+        {
+            if (!String.IsNullOrEmpty(Options.ConnectionString))
+            {
+                return new BlobServiceClient(Options.ConnectionString);
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(Options.AccountName))
+                {
+                    throw new InvalidOperationException("Either ConnectionString or AccountName is required");
+                }
+
+                if (!String.IsNullOrEmpty(Options.ManagedIdentityClientId))
+                {
+                    var options = new DefaultAzureCredentialOptions();
+                    options.ManagedIdentityClientId = Options.ManagedIdentityClientId;
+                    return new BlobServiceClient(
+                        new Uri($"https://{Options.AccountName}.blob.core.windows.net"),
+                        new DefaultAzureCredential(options));
+                }
+                else
+                {
+                    return new BlobServiceClient(
+                        new Uri($"https://{Options.AccountName}.blob.core.windows.net"),
+                        new DefaultAzureCredential());
+                }
+            }
+        }
+
         public AzureBlobsStorageContainer(AzureBlobsStorageOptions options, string container)
         {
             this.Options = options;
             this.Container = container;
             _cloudBlobContainer = new Lazy<BlobContainerClient>(() =>
             {
-                return new BlobContainerClient(Options.ConnectionString, this.Container);
+                var client = GetBlobServiceClient();
+                return client.GetBlobContainerClient(this.Container);
             });
         }
 
