@@ -23,6 +23,11 @@ namespace Pericia.Storage.AwsS3
         {
         }
 
+        public IAmazonS3 GetS3Client()
+        {
+            return _s3Client.Value;
+        }
+
         public S3StorageContainer(S3StorageOptions options, string container)
         {
             this.Options = options;

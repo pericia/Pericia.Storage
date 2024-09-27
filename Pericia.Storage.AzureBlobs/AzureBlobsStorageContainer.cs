@@ -21,6 +21,11 @@ namespace Pericia.Storage.AzureBlobs
         {
         }
 
+        public BlobContainerClient GetBlobContainerClient()
+        {
+            return _cloudBlobContainer.Value;
+        }
+
         private BlobServiceClient GetBlobServiceClient()
         {
             if (!String.IsNullOrEmpty(Options.ConnectionString))

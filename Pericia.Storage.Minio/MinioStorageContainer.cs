@@ -20,6 +20,11 @@ namespace Pericia.Storage.Minio
         {
         }
 
+        public MinioClient GetMinioClient()
+        {
+            return _minioClient.Value;
+        }
+
         public MinioStorageContainer(MinioStorageOptions options, string container)
         {
             this.Options = options;
